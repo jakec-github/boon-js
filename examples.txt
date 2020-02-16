@@ -1,0 +1,13 @@
+first AND second
+(first AND second) OR third
+first AND (second OR third) AND fourth or five
+(first OR (second AND third)) AND fourth
+(first OR second) AND (third OR fourth)
+(first AND NOT second) OR third
+NOT first AND second AND NOT third OR fourth
+first AND (NOT second OR NOT third)
+first AND NOT (second OR third)
+first AND second OR third
+NOT first AND second
+first XOR second
+first XOR NOT second
