@@ -6,7 +6,7 @@ first AND (second OR third) AND fourth or five
 (first AND NOT second) OR third
 NOT first AND second AND NOT third OR fourth
 first AND (NOT second OR NOT third)
-first AND NOT (second OR third)
+first AND NOT ( second OR third )
 first AND second OR third
 NOT first AND second
 first XOR second
