@@ -1,10 +1,10 @@
 import { parse } from '../parse/parse';
 import { ParsedExpression } from '../types';
 
-import { operatorMap } from './const';
+import { OPERATOR_MAP } from './const';
 
 type BooleanMap = Record<string, boolean>;
-type EvaluatorFunction = (BooleanMap) => boolean;
+type EvaluatorFunction = (booleanMap: BooleanMap) => boolean;
 
 // Dear god come up with a better name for this function
 export const getEvaluator = (expression: string): EvaluatorFunction => {
@@ -17,7 +17,7 @@ export const evaluateExpression = (
   { left, right, operator }: ParsedExpression,
   booleanMap: BooleanMap,
 ) => {
-  let operatorFunction = operatorMap[operator];
+  let operatorFunction = OPERATOR_MAP[operator];
 
   const [evaluatedLeft, evaluatedRight] = [left, right].map(
     ({ value, inverted }) => {
