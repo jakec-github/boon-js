@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2018", "dom"],
+    "noImplicitAny": true
+  }
+}
