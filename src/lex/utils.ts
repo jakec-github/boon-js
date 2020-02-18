@@ -1,5 +1,6 @@
 import { DELIMITERS, SPECIAL_CHARACTERS } from './const';
 
+// TODO: Add tests to this function
 export const findNextDelimiter = (expression: string): number => {
   const nextDelimiterIndex = expression
     .split('')

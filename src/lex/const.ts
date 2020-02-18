@@ -12,4 +12,5 @@ export const SPECIAL_CHARACTERS: Record<string, Tokens> = {
   ')': Tokens.CLOSE_PARENTHESIS,
 };
 
+// TODO: Add all space characters
 export const DELIMITERS = new Set([' ', '\n']);
