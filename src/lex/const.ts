@@ -1,4 +1,4 @@
-import { Tokens } from '../types';
+import { Tokens, Operators } from '../types';
 
 export const RESERVED_WORDS: Record<string, Tokens> = {
   AND: Tokens.OPERATOR,
@@ -10,6 +10,12 @@ export const RESERVED_WORDS: Record<string, Tokens> = {
 export const SPECIAL_CHARACTERS: Record<string, Tokens> = {
   '(': Tokens.OPEN_PARENTHESIS,
   ')': Tokens.CLOSE_PARENTHESIS,
+};
+
+export const OPERATORS: Record<string, Operators> = {
+  AND: Operators.AND,
+  OR: Operators.OR,
+  XOR: Operators.XOR,
 };
 
 // TODO: Add all space characters

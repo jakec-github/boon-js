@@ -27,82 +27,82 @@ export const newLine = '\n';
 
 export const withAndOperatorAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.VARIABLE, value: 'second' },
 ];
 export const withOrOperatorAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'OR' },
+  { type: Tokens.OPERATOR, subType: 'OR' },
   { type: Tokens.VARIABLE, value: 'second' },
 ];
 export const withParenthesesAnswer = [
   { type: Tokens.OPEN_PARENTHESIS },
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.VARIABLE, value: 'second' },
   { type: Tokens.CLOSE_PARENTHESIS },
-  { type: Tokens.OPERATOR, value: 'OR' },
+  { type: Tokens.OPERATOR, subType: 'OR' },
   { type: Tokens.VARIABLE, value: 'third' },
 ];
 export const withNestedParenthesesAnswer = [
   { type: Tokens.OPEN_PARENTHESIS },
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'OR' },
+  { type: Tokens.OPERATOR, subType: 'OR' },
   { type: Tokens.OPEN_PARENTHESIS },
   { type: Tokens.VARIABLE, value: 'second' },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.VARIABLE, value: 'third' },
   { type: Tokens.CLOSE_PARENTHESIS },
   { type: Tokens.CLOSE_PARENTHESIS },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.VARIABLE, value: 'fourth' },
 ];
 export const withNotOperatorAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'AND' },
-  { type: Tokens.NEGATION, value: 'NOT' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
+  { type: Tokens.NEGATION },
   { type: Tokens.VARIABLE, value: 'second' },
 ];
 export const withMultipleNestedNotOperatorsAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.OPEN_PARENTHESIS },
-  { type: Tokens.NEGATION, value: 'NOT' },
+  { type: Tokens.NEGATION },
   { type: Tokens.VARIABLE, value: 'second' },
-  { type: Tokens.OPERATOR, value: 'OR' },
-  { type: Tokens.NEGATION, value: 'NOT' },
+  { type: Tokens.OPERATOR, subType: 'OR' },
+  { type: Tokens.NEGATION },
   { type: Tokens.VARIABLE, value: 'third' },
   { type: Tokens.CLOSE_PARENTHESIS },
 ];
 export const withXorOperatorAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'XOR' },
+  { type: Tokens.OPERATOR, subType: 'XOR' },
   { type: Tokens.VARIABLE, value: 'second' },
 ];
 
 export const withSpacedParenthesesAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'AND' },
-  { type: Tokens.NEGATION, value: 'NOT' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
+  { type: Tokens.NEGATION },
   { type: Tokens.OPEN_PARENTHESIS },
   { type: Tokens.VARIABLE, value: 'second' },
-  { type: Tokens.OPERATOR, value: 'OR' },
+  { type: Tokens.OPERATOR, subType: 'OR' },
   { type: Tokens.VARIABLE, value: 'third' },
   { type: Tokens.CLOSE_PARENTHESIS },
 ];
 export const withLineBreaksAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'OR' },
+  { type: Tokens.OPERATOR, subType: 'OR' },
   { type: Tokens.VARIABLE, value: 'second' },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.OPEN_PARENTHESIS },
   { type: Tokens.VARIABLE, value: 'third' },
-  { type: Tokens.OPERATOR, value: 'XOR' },
+  { type: Tokens.OPERATOR, subType: 'XOR' },
   { type: Tokens.VARIABLE, value: 'fourth' },
   { type: Tokens.CLOSE_PARENTHESIS },
 ];
 export const withTrailingWhitespaceAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
-  { type: Tokens.OPERATOR, value: 'AND' },
+  { type: Tokens.OPERATOR, subType: 'AND' },
   { type: Tokens.VARIABLE, value: 'second' },
 ];
