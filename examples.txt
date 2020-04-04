@@ -1,6 +1,6 @@
 first AND second
 (first AND second) OR third
-first AND (second OR third) AND fourth or five
+first AND (second OR third) AND fourth or fifth
 (first OR (second AND third)) AND fourth
 (first OR second) AND (third OR fourth)
 (first AND NOT second) OR third
@@ -11,3 +11,21 @@ first AND second OR third
 NOT first AND second
 first XOR second
 first XOR NOT second
+
+first OR second AND third
+first AND second AND third
+first OR second OR third AND fourth
+first AND second OR third OR fourth
+first AND second AND third AND fourth AND fifth
+
+This one breaks the current ParsedExpression object as there is no way to invert at the top level
+NOT(first AND second)
+
+Also an interesting case
+first
+NOT first
+
+What about
+first OR second AND third OR fourth
+first AND second OR third AND fourth
+first AND second XOR third OR fourth

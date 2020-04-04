@@ -14,17 +14,17 @@ export enum Tokens {
   NEGATION,
 }
 
-export interface ParsedValue {
-  value: string | ParsedExpression;
+export type TokenSet = Set<Tokens>;
+
+// Inverted should read negated for consistency
+export interface ParsedExpression {
+  value: string | ParsedOperator;
   inverted: boolean;
 }
 
-// As boolean ops are all commutative
-// left and right should be replaced by
-// terms: [ParsedValue, ParsedValue];
-export interface ParsedExpression {
-  left: ParsedValue;
-  right: ParsedValue;
+export interface ParsedOperator {
+  left: ParsedExpression;
+  right: ParsedExpression;
   operator: Operators;
 }
 
