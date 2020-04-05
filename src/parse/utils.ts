@@ -2,18 +2,16 @@ import {
   Tokens,
   TokenSet,
   ParsedExpression,
-  ExpressionValue,
   Operators,
+  ParsedOperator,
 } from '../types';
 
 import { OPERATOR_PRECEDENCE } from './const';
 
 export const getPreviousValues = ({
   value,
-}: ParsedExpression): ExpressionValue[] =>
-  typeof value === 'string'
-    ? [value]
-    : [...getPreviousValues(value.right), value];
+}: ParsedExpression): ParsedOperator[] =>
+  typeof value === 'string' ? [] : [...getPreviousValues(value.right), value];
 
 export const previousOperatorTakesPrecedent = (
   previousOperator: Operators,

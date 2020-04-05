@@ -225,8 +225,6 @@ describe('parse', () => {
   test('should parse an expression with an OR then an AND then an XOR operator', () => {
     const result = parse('first OR second AND third XOR fourth');
 
-    console.log(JSON.stringify(result, null, 2));
-
     expect(result).toEqual({
       value: {
         left: {
