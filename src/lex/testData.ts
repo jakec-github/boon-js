@@ -1,5 +1,6 @@
 import { Tokens } from '../types';
 
+export const withSingleVariable = 'first';
 export const withAndOperator = 'first AND second';
 export const withOrOperator = 'first OR second';
 export const withParentheses = '(first AND second) OR third';
@@ -25,6 +26,9 @@ export const whitespace = ' ';
 export const severalWhitespaces = '          ';
 export const newLine = '\n';
 
+export const withSingleVariableAnswer = [
+  { type: Tokens.VARIABLE, value: 'first' },
+];
 export const withAndOperatorAnswer = [
   { type: Tokens.VARIABLE, value: 'first' },
   { type: Tokens.OPERATOR, subType: 'AND' },

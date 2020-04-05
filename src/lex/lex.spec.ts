@@ -3,6 +3,8 @@ import { Tokens } from '../types';
 
 import { lex } from './lex';
 import {
+  withSingleVariable,
+  withSingleVariableAnswer,
   withAndOperator,
   withNestedParentheses,
   withOrOperator,
@@ -46,6 +48,12 @@ describe('lex', () => {
     const result = lexEntireExpression(withOrOperator);
 
     expect(result).toEqual(withOrOperatorAnswer);
+  });
+
+  test('should parse an expression with just one variable', () => {
+    const result = lexEntireExpression(withSingleVariable);
+
+    expect(result).toEqual(withSingleVariableAnswer);
   });
 
   test('should lex a expressions with any sequence of tokens', () => {
