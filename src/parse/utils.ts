@@ -8,22 +8,6 @@ import {
 
 import { OPERATOR_PRECEDENCE } from './const';
 
-export const cloneExpression = (
-  expression: ParsedExpression,
-): ParsedExpression => ({
-  ...expression,
-  value:
-    typeof expression.value === 'string'
-      ? expression.value
-      : cloneOperator(expression.value),
-});
-
-const cloneOperator = (operator: ParsedOperator): ParsedOperator => ({
-  ...operator,
-  left: cloneExpression(operator.left),
-  right: cloneExpression(operator.right),
-});
-
 export const getPathToLastValue = ({ value }: ParsedExpression): string[] => {
   if (typeof value === 'string') {
     return ['value'];

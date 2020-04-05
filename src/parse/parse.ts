@@ -9,35 +9,26 @@ import {
 
 import { TOKEN_SETS } from './const';
 import {
-  cloneExpression,
   getPathToLastValue,
   resolvePath,
   validateToken,
   previousOperatorTakesPrecedent,
 } from './utils';
 
-// Ultimately we will only return part of the recursive response
-// Also the recursive parse defintely doesn't need to recurse.
-// Can easily avoid the stack overflow issues
-export const parse = (expression: string): ParsedExpression =>
-  recursiveParse(expression);
+// export const parse = (expression: string): ParsedExpression =>
+//   recursiveParse(expression);
 
-const recursiveParse = (
-  remainingExpression: string,
-  currentParsedExpression: ParsedExpression = null,
-  nested = false,
-): ParsedExpression => {
-  let remainingExpressionInner = remainingExpression;
-  // console.log(remainingExpressionInner);
+export const parse = (expression: string): ParsedExpression => {
+  let remainingExpression = expression;
 
   // Would like to get a little more functional here and declare elsewhere and remove the let
   // on remainingExpressionInner
   const getNextToken = (expectedTokenSet: TokenSet): LexToken => {
-    if (!remainingExpressionInner) {
+    if (!remainingExpression) {
       throw new Error('Unexpected end of expression');
     }
-    const { token, remainingString } = lex(remainingExpressionInner);
-    remainingExpressionInner = remainingString;
+    const { token, remainingString } = lex(remainingExpression);
+    remainingExpression = remainingString;
     validateToken(token.type, expectedTokenSet);
     return token;
   };
@@ -56,85 +47,53 @@ const recursiveParse = (
     return subType;
   };
 
-  if (!currentParsedExpression) {
-    const latestExpression: ParsedExpression = getValue();
+  let currentParsedExpression = getValue();
 
-    if (remainingExpressionInner) {
-      console.log(`Recursing with: ${remainingExpressionInner}`);
-      return recursiveParse(remainingExpressionInner, latestExpression);
-    }
-    return latestExpression;
-  }
+  while (remainingExpression) {
+    const nextOperator = getOperator();
+    const nextVariable = getValue();
 
-  const nextOperator = getOperator();
-  const nextVariable = getValue();
+    // This path thing needs to get replaced with a reference to all the previous (right side) values
+    let pathToPreviousValue = getPathToLastValue(currentParsedExpression);
 
-  // Probably want to improve this naming
-  // Also the whole path thing should mayve just be an array of references
-  // to objects/values within the AST that I need
-  let pathToLastValue = getPathToLastValue(currentParsedExpression);
+    while (true) {
+      // Potentially is possible to generalise so that this branch is necessary\
+      if (pathToPreviousValue.length === 1) {
+        currentParsedExpression = {
+          value: {
+            left: currentParsedExpression,
+            right: nextVariable,
+            operator: nextOperator,
+          },
+          inverted: false,
+        };
+        break;
+      }
 
-  let afterAddingNextVariable = {} as ParsedExpression;
+      // This seems weird cause we didn't really use this much before slicing
+      pathToPreviousValue = pathToPreviousValue.slice(0, -2);
 
-  let count = 0;
-
-  while (true && count < 10) {
-    console.log(pathToLastValue);
-    count++;
-    if (pathToLastValue.length === 1) {
-      afterAddingNextVariable = {
-        value: {
-          left: currentParsedExpression,
-          right: nextVariable,
-          operator: nextOperator,
-        },
-        inverted: false,
-      };
-      break;
-    }
-
-    const pathToLastParsedOperator = pathToLastValue.slice(0, -2);
-    const lastParsedOperator: ParsedOperator = resolvePath(
-      currentParsedExpression,
-      pathToLastParsedOperator,
-    );
-    const lastOperator = lastParsedOperator.operator;
-
-    console.log(currentParsedExpression);
-    console.log(pathToLastValue);
-    console.log(pathToLastParsedOperator);
-
-    if (previousOperatorTakesPrecedent(lastOperator, nextOperator)) {
-      pathToLastValue = pathToLastParsedOperator;
-    } else {
-      // Will have to mutate the exisiting object
-      // Feel this is another reason not to go recursive
-      const currentParsedExpressionCopy = cloneExpression(
+      // This is really nasty non-typesafe stuff we don't want
+      const lastValue: ParsedOperator = resolvePath(
         currentParsedExpression,
+        pathToPreviousValue,
       );
 
-      let lastOperatorParentCopy: ParsedOperator = resolvePath(
-        currentParsedExpressionCopy,
-        pathToLastParsedOperator,
-      );
+      const lastOperator = lastValue.operator;
 
-      lastOperatorParentCopy.right = {
-        value: {
-          left: lastOperatorParentCopy.right,
-          right: nextVariable,
-          operator: nextOperator,
-        },
-        inverted: false,
-      };
-
-      afterAddingNextVariable = currentParsedExpressionCopy;
-      break;
+      if (!previousOperatorTakesPrecedent(lastOperator, nextOperator)) {
+        lastValue.right = {
+          value: {
+            left: lastValue.right,
+            right: nextVariable,
+            operator: nextOperator,
+          },
+          inverted: false,
+        };
+        break;
+      }
     }
   }
 
-  if (remainingExpressionInner) {
-    console.log(`Recursing2 with: ${remainingExpressionInner}`);
-    return recursiveParse(remainingExpressionInner, afterAddingNextVariable);
-  }
-  return afterAddingNextVariable;
+  return currentParsedExpression;
 };
