@@ -43,21 +43,22 @@ export const parse = (expression: string): ParsedExpression => {
     return subType;
   };
 
-  let currentParsedExpression = getValue();
+  // This object may be mutated as the expression is constructed
+  // It is returned when completed
+  let parsedExpression = getValue();
 
   while (remainingExpression) {
     const nextOperator = getOperator();
     const nextVariable = getValue();
 
-    let previousValues = getPreviousValues(currentParsedExpression);
+    let previousValues = getPreviousValues(parsedExpression);
 
     while (true) {
-      // Potentially is possible to generalise so that this branch isn't necessary
-      // TO UNDERSTAND: this seem to assume that the previous operator takes precendent
-      if (previousValues.length === 0) {
-        currentParsedExpression = {
+      const noPreviousValuesTakePrecendent = previousValues.length === 0;
+      if (noPreviousValuesTakePrecendent) {
+        parsedExpression = {
           value: {
-            left: currentParsedExpression,
+            left: parsedExpression,
             right: nextVariable,
             operator: nextOperator,
           },
@@ -85,5 +86,5 @@ export const parse = (expression: string): ParsedExpression => {
     }
   }
 
-  return currentParsedExpression;
+  return parsedExpression;
 };
