@@ -9,14 +9,10 @@ import {
 
 import { TOKEN_SETS } from './const';
 import {
-  getPathToLastValue,
-  resolvePath,
   validateToken,
   previousOperatorTakesPrecedent,
+  getPreviousValues,
 } from './utils';
-
-// export const parse = (expression: string): ParsedExpression =>
-//   recursiveParse(expression);
 
 export const parse = (expression: string): ParsedExpression => {
   let remainingExpression = expression;
@@ -54,11 +50,13 @@ export const parse = (expression: string): ParsedExpression => {
     const nextVariable = getValue();
 
     // This path thing needs to get replaced with a reference to all the previous (right side) values
-    let pathToPreviousValue = getPathToLastValue(currentParsedExpression);
+    // let pathToPreviousValue = getPathToLastValue(currentParsedExpression);
+    let previousValues = getPreviousValues(currentParsedExpression);
 
     while (true) {
-      // Potentially is possible to generalise so that this branch is necessary\
-      if (pathToPreviousValue.length === 1) {
+      // Potentially is possible to generalise so that this branch isn't necessary
+      // TO UNDERSTAND: this seem to assume that the previous operator takes precendent
+      if (previousValues.length === 1) {
         currentParsedExpression = {
           value: {
             left: currentParsedExpression,
@@ -71,14 +69,9 @@ export const parse = (expression: string): ParsedExpression => {
       }
 
       // This seems weird cause we didn't really use this much before slicing
-      pathToPreviousValue = pathToPreviousValue.slice(0, -2);
+      previousValues = previousValues.slice(1);
 
-      // This is really nasty non-typesafe stuff we don't want
-      const lastValue: ParsedOperator = resolvePath(
-        currentParsedExpression,
-        pathToPreviousValue,
-      );
-
+      const lastValue = previousValues[0] as ParsedOperator;
       const lastOperator = lastValue.operator;
 
       if (!previousOperatorTakesPrecedent(lastOperator, nextOperator)) {

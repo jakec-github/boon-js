@@ -16,9 +16,10 @@ export enum Tokens {
 
 export type TokenSet = Set<Tokens>;
 
+export type ExpressionValue = string | ParsedOperator;
 // Inverted should read negated for consistency
 export interface ParsedExpression {
-  value: string | ParsedOperator;
+  value: ExpressionValue;
   inverted: boolean;
 }
 
