@@ -3,7 +3,7 @@ import { Operators } from '../types';
 import { parse } from './parse';
 
 describe('parse', () => {
-  test('should parse an single value', () => {
+  test('should parse a single value', () => {
     const result = parse('first');
 
     expect(result).toEqual({
@@ -31,7 +31,7 @@ describe('parse', () => {
     });
   });
 
-  test('should fail if terms are out of order', () => {
+  test('should throw if terms are out of order', () => {
     expect(() => {
       parse('AND first second');
     }).toThrow('Invalid token');
@@ -47,6 +47,12 @@ describe('parse', () => {
     expect(() => {
       parse('first AND AND second');
     }).toThrow('Invalid token');
+  });
+
+  test('should throw from an expression with an OR then a hanging AND operator', () => {
+    expect(() => {
+      parse('first OR second AND ');
+    }).toThrow('Unexpected end of expression');
   });
 
   test('should parse an expression with an AND then an OR operator', () => {
@@ -255,11 +261,5 @@ describe('parse', () => {
       },
       inverted: false,
     });
-  });
-
-  test.only('should throw from an expression with an OR then a hanging AND operator', () => {
-    expect(() => {
-      parse('first OR second AND ');
-    }).toThrow('Unexpected end of expression');
   });
 });
