@@ -3,9 +3,12 @@ import { Operators } from '../types';
 import { evaluateExpression } from './evaluate';
 
 const parsedExpression = {
-  left: { value: 'first', inverted: false },
-  right: { value: 'second', inverted: false },
-  operator: Operators.AND,
+  value: {
+    left: { value: 'first', inverted: false },
+    right: { value: 'second', inverted: false },
+    operator: Operators.AND,
+  },
+  inverted: false,
 };
 
 const booleanMap = {
@@ -20,7 +23,7 @@ describe('evaluateExpression', () => {
     expect(typeof result).toEqual('boolean');
   });
 
-  test('should return false for default parsedExpression', () => {
+  test('should return false for simple parsedExpression', () => {
     const result = evaluateExpression(parsedExpression, booleanMap);
 
     expect(typeof result).toEqual('boolean');

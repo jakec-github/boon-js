@@ -14,24 +14,21 @@ export const getEvaluator = (expression: string): EvaluatorFunction => {
 };
 
 export const evaluateExpression = (
-  { left, right, operator }: ParsedExpression,
+  { value, inverted }: ParsedExpression,
   booleanMap: BooleanMap,
-) => {
-  let operatorFunction = OPERATOR_MAP[operator];
+): boolean => {
+  let evaluatedValue: boolean;
 
-  const [evaluatedLeft, evaluatedRight] = [left, right].map(
-    ({ value, inverted }) => {
-      let evaluatedSide: boolean = null;
+  if (typeof value === 'string') {
+    evaluatedValue = booleanMap[value];
+  } else {
+    const operatorFunction = OPERATOR_MAP[value.operator];
 
-      if (typeof value === 'string') {
-        evaluatedSide = booleanMap[value];
-      } else {
-        evaluatedSide = evaluateExpression(value, booleanMap);
-      }
+    return operatorFunction(
+      evaluateExpression(value.left, booleanMap),
+      evaluateExpression(value.right, booleanMap),
+    );
+  }
 
-      return inverted ? !evaluatedSide : evaluatedSide;
-    },
-  );
-
-  return operatorFunction(evaluatedLeft, evaluatedRight);
+  return inverted ? !evaluatedValue : evaluatedValue;
 };
