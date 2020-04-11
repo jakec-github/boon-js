@@ -1,5 +1,6 @@
-// This type may need to be exported globally since
+// This type may need to be exported publicly since
 // it is found in the result
+// Should include NOT
 export enum Operators {
   AND = 'AND',
   OR = 'OR',
@@ -7,7 +8,7 @@ export enum Operators {
 }
 
 export enum Tokens {
-  VARIABLE,
+  VARIABLE, // To become OPERAND
   OPERATOR,
   OPEN_PARENTHESIS,
   CLOSE_PARENTHESIS,
@@ -35,8 +36,28 @@ export interface LexToken {
   value?: string;
   subType?: Operators;
 }
-// These types don't contain operato and need to be updated
+// These types don't contain operator and need to be updated
 export interface LexResult {
   token: LexToken;
   remainingString: string;
 }
+
+export enum PostfixTypes {
+  OPERAND = 'OPERAND',
+  OPERATOR = 'OPERATOR',
+}
+
+interface OperandSymbol {
+  type: PostfixTypes.OPERAND;
+  value: string;
+}
+
+export interface OperatorSymbol {
+  type: PostfixTypes.OPERATOR;
+  value: Operators;
+}
+
+export type Symbol = OperandSymbol | OperatorSymbol;
+
+export type PostfixExpression = Symbol[];
+export type OperatorStack = OperatorSymbol[];
