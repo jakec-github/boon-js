@@ -1,4 +1,4 @@
-import { Operators } from '../types';
+import { Operators, Tokens } from '../types';
 
 import { parse } from './parse';
 
@@ -6,29 +6,17 @@ describe('parse', () => {
   test('should parse a single value', () => {
     const result = parse('first');
 
-    expect(result).toEqual({
-      value: 'first',
-      inverted: false,
-    });
+    expect(result).toEqual([{ name: Tokens.OPERAND, value: 'first' }]);
   });
 
   test('should parse a simple expression', () => {
     const result = parse('first AND second');
 
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: 'first',
-          inverted: false,
-        },
-        right: {
-          value: 'second',
-          inverted: false,
-        },
-        operator: Operators.AND,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+    ]);
   });
 
   test('should throw if terms are out of order', () => {
@@ -58,206 +46,78 @@ describe('parse', () => {
   test('should parse an expression with an AND then an OR operator', () => {
     const result = parse('first AND second OR third');
 
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: {
-            left: {
-              value: 'first',
-              inverted: false,
-            },
-            right: {
-              value: 'second',
-              inverted: false,
-            },
-            operator: Operators.AND,
-          },
-          inverted: false,
-        },
-        right: {
-          value: 'third',
-          inverted: false,
-        },
-        operator: Operators.OR,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+    ]);
   });
 
   test('should parse an expression with an AND then an AND operator', () => {
     const result = parse('first AND second AND third');
 
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: {
-            left: {
-              value: 'first',
-              inverted: false,
-            },
-            right: {
-              value: 'second',
-              inverted: false,
-            },
-            operator: Operators.AND,
-          },
-          inverted: false,
-        },
-        right: {
-          value: 'third',
-          inverted: false,
-        },
-        operator: Operators.AND,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+    ]);
   });
 
   test('should parse an expression with an XOR, AND then an OR operator', () => {
     const result = parse('first XOR second AND third OR fourth');
 
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: {
-            left: {
-              value: {
-                left: {
-                  value: 'first',
-                  inverted: false,
-                },
-                right: {
-                  value: 'second',
-                  inverted: false,
-                },
-                operator: Operators.XOR,
-              },
-              inverted: false,
-            },
-            right: {
-              value: 'third',
-              inverted: false,
-            },
-            operator: Operators.AND,
-          },
-          inverted: false,
-        },
-        right: {
-          value: 'fourth',
-          inverted: false,
-        },
-        operator: Operators.OR,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+    ]);
   });
 
   test('should parse an expression with an OR then an AND operator', () => {
     const result = parse('first OR second AND third');
 
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: 'first',
-          inverted: false,
-        },
-        right: {
-          value: {
-            left: {
-              value: 'second',
-              inverted: false,
-            },
-            right: {
-              value: 'third',
-              inverted: false,
-            },
-            operator: Operators.AND,
-          },
-          inverted: false,
-        },
-        operator: Operators.OR,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+    ]);
   });
 
   test('should parse an expression with an AND then an XOR then an OR operator', () => {
     const result = parse('first AND second XOR third OR fourth');
 
-    // console.log(JSON.stringify(result, null, 2));
-
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: {
-            left: {
-              value: 'first',
-              inverted: false,
-            },
-            right: {
-              value: {
-                left: {
-                  value: 'second',
-                  inverted: false,
-                },
-                right: {
-                  value: 'third',
-                  inverted: false,
-                },
-                operator: Operators.XOR,
-              },
-              inverted: false,
-            },
-            operator: Operators.AND,
-          },
-          inverted: false,
-        },
-        right: {
-          value: 'fourth',
-          inverted: false,
-        },
-        operator: Operators.OR,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+    ]);
   });
 
   test('should parse an expression with an OR then an AND then an XOR operator', () => {
     const result = parse('first OR second AND third XOR fourth');
 
-    expect(result).toEqual({
-      value: {
-        left: {
-          value: 'first',
-          inverted: false,
-        },
-        right: {
-          value: {
-            left: {
-              value: 'second',
-              inverted: false,
-            },
-            right: {
-              value: {
-                left: {
-                  value: 'third',
-                  inverted: false,
-                },
-                right: {
-                  value: 'fourth',
-                  inverted: false,
-                },
-                operator: Operators.XOR,
-              },
-              inverted: false,
-            },
-            operator: Operators.AND,
-          },
-          inverted: false,
-        },
-        operator: Operators.OR,
-      },
-      inverted: false,
-    });
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+    ]);
   });
 });

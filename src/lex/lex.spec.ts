@@ -37,7 +37,7 @@ describe('lex', () => {
 
     expect(result).toEqual({
       token: {
-        type: Tokens.VARIABLE,
+        name: Tokens.OPERAND,
         value: 'first',
       },
       remainingString: ' AND second',

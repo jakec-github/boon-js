@@ -1,7 +1,7 @@
 import { PROJECT_NAME } from '../const';
-import { LexResult, Tokens } from '../types';
+import { LexResult, Tokens, Operators } from '../types';
 
-import { RESERVED_WORDS, SPECIAL_CHARACTERS, OPERATORS } from './const';
+import { SPECIAL_CHARACTERS, OPERATORS } from './const';
 import { findNextDelimiter } from './utils';
 
 export const lex = (expression: string): LexResult => {
@@ -16,7 +16,8 @@ export const lex = (expression: string): LexResult => {
   if (SPECIAL_CHARACTERS[trimmedExpression[0]]) {
     return {
       token: {
-        type: SPECIAL_CHARACTERS[trimmedExpression[0]],
+        name: Tokens.SPECIAL_CHARACTER,
+        value: SPECIAL_CHARACTERS[trimmedExpression[0]],
       },
       remainingString: trimmedExpression.slice(1),
     };
@@ -29,22 +30,23 @@ export const lex = (expression: string): LexResult => {
   const value = trimmedExpression.slice(0, nextDelimiterIndex);
   const remainingString = trimmedExpression.slice(nextDelimiterIndex);
 
-  const reservedWordType = RESERVED_WORDS[value];
+  const operator = OPERATORS[value];
 
-  if (reservedWordType === Tokens.NEGATION) {
+  if (operator === Operators.NOT) {
     return {
       token: {
-        type: Tokens.NEGATION,
+        name: Tokens.OPERATOR,
+        value: Operators.NOT,
       },
       remainingString,
     };
   }
 
-  if (reservedWordType) {
+  if (operator) {
     return {
       token: {
-        type: Tokens.OPERATOR,
-        subType: OPERATORS[value],
+        name: Tokens.OPERATOR,
+        value: operator,
       },
       remainingString,
     };
@@ -53,7 +55,7 @@ export const lex = (expression: string): LexResult => {
   // Returns the LexResult
   return {
     token: {
-      type: Tokens.VARIABLE,
+      name: Tokens.OPERAND,
       value,
     },
     remainingString,

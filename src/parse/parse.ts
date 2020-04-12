@@ -1,90 +1,55 @@
 import { lex } from '../lex/lex';
 import {
-  Operators,
-  ParsedExpression,
-  TokenSet,
-  LexToken,
-  ParsedOperator,
+  TokenSets,
+  Token,
+  PostfixExpression,
+  OperatorStack,
+  OperatorToken,
 } from '../types';
 
-import { TOKEN_SETS } from './const';
-import {
-  validateToken,
-  previousOperatorTakesPrecedent,
-  getPreviousValues,
-} from './utils';
+import { validateToken, previousOperatorTakesPrecedent } from './utils';
 
-export const parse = (expression: string): ParsedExpression => {
+export const parse = (expression: string): PostfixExpression => {
   let remainingExpression = expression;
 
-  // Would like to get a little more functional here and declare elsewhere and remove the let
-  // on remainingExpressionInner
-  const getNextToken = (expectedTokenSet: TokenSet): LexToken => {
+  // Ideally this should be a generic for full type safety
+  const getNextToken = (expectedTokenSet: TokenSets): Token => {
     if (!remainingExpression) {
       throw new Error('Unexpected end of expression');
     }
     const { token, remainingString } = lex(remainingExpression);
     remainingExpression = remainingString;
-    validateToken(token.type, expectedTokenSet);
+
+    validateToken(token, expectedTokenSet);
+
     return token;
   };
 
   // This will later handle potential parentheses and negations
-  const getValue = (): ParsedExpression => {
-    const { value } = getNextToken(TOKEN_SETS.variable);
+  const getValue = (): PostfixExpression => [getNextToken(TokenSets.OPERAND)];
 
-    return {
-      value,
-      inverted: false,
-    };
-  };
-  const getOperator = (): Operators => {
-    const { subType } = getNextToken(TOKEN_SETS.operator);
-    return subType;
-  };
+  // This type casting should be solvable when types are sorted using a generic
+  const getOperator = (): OperatorToken =>
+    getNextToken(TokenSets.OPERATOR) as OperatorToken;
 
-  // This object may be mutated as the expression is constructed
-  // It is returned when completed
-  let parsedExpression = getValue();
+  let outputStack: PostfixExpression = [...getValue()];
+  let operatorStack: OperatorStack = [];
 
   while (remainingExpression) {
     const nextOperator = getOperator();
-    const nextVariable = getValue();
-
-    let previousValues = getPreviousValues(parsedExpression);
-
-    while (true) {
-      const noPreviousValuesTakePrecendent = previousValues.length === 0;
-      if (noPreviousValuesTakePrecendent) {
-        parsedExpression = {
-          value: {
-            left: parsedExpression,
-            right: nextVariable,
-            operator: nextOperator,
-          },
-          inverted: false,
-        };
-        break;
-      }
-
-      const lastValue = previousValues[0] as ParsedOperator;
-      const lastOperator = lastValue.operator;
-
-      if (!previousOperatorTakesPrecedent(lastOperator, nextOperator)) {
-        lastValue.right = {
-          value: {
-            left: lastValue.right,
-            right: nextVariable,
-            operator: nextOperator,
-          },
-          inverted: false,
-        };
-        break;
-      } else {
-        previousValues = previousValues.slice(1);
-      }
+    const previousOperator = operatorStack[operatorStack.length - 1] || null;
+    if (
+      previousOperator &&
+      previousOperatorTakesPrecedent(previousOperator.value, nextOperator.value)
+    ) {
+      outputStack = [...outputStack, ...operatorStack.reverse()]; // Disgusting mutating method
+      operatorStack = [];
     }
+    operatorStack = [...operatorStack, nextOperator];
+    outputStack = [...outputStack, ...getValue()];
   }
 
-  return parsedExpression;
+  outputStack = [...outputStack, ...operatorStack.reverse()]; // Disgusting mutating method
+
+  return outputStack;
 };
