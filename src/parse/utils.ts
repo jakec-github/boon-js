@@ -14,14 +14,23 @@ export const validateToken = (
 ): void => {
   switch (expectedTokens) {
     case TokenSets.OPERAND:
-      // This case needs fleshing out to handle NOT and ()
       if (token.name === Tokens.OPERAND) {
         return;
       }
+      break;
+    case TokenSets.OPERAND_OR_NOT:
+      if (token.name === Tokens.OPERAND) {
+        return;
+      }
+      if (token.value === Operators.NOT) {
+        return;
+      }
+      break;
     case TokenSets.OPERATOR:
       if (token.name === Tokens.OPERATOR && token.value !== Operators.NOT) {
         return;
       }
+      break;
   }
   throw new TypeError('Invalid token');
 };

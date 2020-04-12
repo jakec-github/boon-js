@@ -120,4 +120,35 @@ describe('parse', () => {
       { name: Tokens.OPERATOR, value: Operators.OR },
     ]);
   });
+
+  test('should handle the NOT operator', () => {
+    const result = parse('NOT first');
+
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+    ]);
+  });
+
+  test('should throw on two NOT operators in a row', () => {
+    expect(() => {
+      parse('NOT NOT');
+    }).toThrow('Invalid token');
+  });
+
+  test('should handle a complicated expression with multiple NOT operators', () => {
+    const result = parse('NOT first AND second AND NOT third XOR NOT fourth');
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+    ]);
+  });
 });

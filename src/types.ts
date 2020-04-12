@@ -45,5 +45,6 @@ export type OperatorStack = OperatorToken[];
 
 export enum TokenSets {
   OPERAND,
+  OPERAND_OR_NOT,
   OPERATOR,
 }

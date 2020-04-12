@@ -5,6 +5,7 @@ import {
   PostfixExpression,
   OperatorStack,
   OperatorToken,
+  Operators,
 } from '../types';
 
 import { validateToken, previousOperatorTakesPrecedent } from './utils';
@@ -26,9 +27,16 @@ export const parse = (expression: string): PostfixExpression => {
   };
 
   // This will later handle potential parentheses and negations
-  const getValue = (): PostfixExpression => [getNextToken(TokenSets.OPERAND)];
+  const getValue = (): PostfixExpression => {
+    const nextToken = getNextToken(TokenSets.OPERAND_OR_NOT);
 
-  // This type casting should be solvable when types are sorted using a generic
+    if (nextToken.value === Operators.NOT) {
+      return [getNextToken(TokenSets.OPERAND), nextToken];
+    }
+    return [nextToken];
+  };
+
+  // This type casting should be solvable using a generic
   const getOperator = (): OperatorToken =>
     getNextToken(TokenSets.OPERATOR) as OperatorToken;
 
