@@ -1,12 +1,13 @@
 import { parse } from '../parse/parse';
-import { ParsedExpression } from '../types';
+import { PostfixExpression, Tokens, Operators } from '../types';
 
 import { OPERATOR_MAP } from './const';
+import { notUtil } from './utils';
 
 type BooleanMap = Record<string, boolean>;
 type EvaluatorFunction = (booleanMap: BooleanMap) => boolean;
 
-// Dear god come up with a better name for this function
+// Dear god come up with a better name for this function before exporting publically
 export const getEvaluator = (expression: string): EvaluatorFunction => {
   const parsedExpression = parse(expression);
 
@@ -14,21 +15,18 @@ export const getEvaluator = (expression: string): EvaluatorFunction => {
 };
 
 export const evaluateExpression = (
-  { value, inverted }: ParsedExpression,
+  expression: PostfixExpression,
   booleanMap: BooleanMap,
-): boolean => {
-  let evaluatedValue: boolean;
-
-  if (typeof value === 'string') {
-    evaluatedValue = booleanMap[value];
-  } else {
-    const operatorFunction = OPERATOR_MAP[value.operator];
-
-    return operatorFunction(
-      evaluateExpression(value.left, booleanMap),
-      evaluateExpression(value.right, booleanMap),
-    );
-  }
-
-  return inverted ? !evaluatedValue : evaluatedValue;
-};
+): boolean =>
+  expression.reduce<boolean[]>((acc, token) => {
+    if (token.name === Tokens.OPERAND) {
+      return [...acc, Boolean(booleanMap[token.value])];
+    }
+    const [secondLastItem, lastItem] = acc.slice(-2);
+    return token.value === Operators.NOT
+      ? [...acc.slice(0, -1), notUtil(lastItem)]
+      : [
+          ...acc.slice(0, -2),
+          OPERATOR_MAP[token.value](secondLastItem, lastItem),
+        ];
+  }, [])[0];
