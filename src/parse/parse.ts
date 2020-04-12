@@ -8,12 +8,16 @@ import {
   Operators,
 } from '../types';
 
-import { validateToken, previousOperatorTakesPrecedent } from './utils';
+import {
+  addOperatorsToOutput,
+  previousOperatorTakesPrecedent,
+  validateToken,
+} from './utils';
 
 export const parse = (expression: string): PostfixExpression => {
   let remainingExpression = expression;
 
-  // Ideally this should be a generic for full type safety
+  // This should be a generic for full type safety
   const getNextToken = (expectedTokenSet: TokenSets): Token => {
     if (!remainingExpression) {
       throw new Error('Unexpected end of expression');
@@ -40,24 +44,23 @@ export const parse = (expression: string): PostfixExpression => {
   const getOperator = (): OperatorToken =>
     getNextToken(TokenSets.OPERATOR) as OperatorToken;
 
-  let outputStack: PostfixExpression = [...getValue()];
-  let operatorStack: OperatorStack = [];
+  let output: PostfixExpression = [...getValue()];
+  let operators: OperatorStack = [];
 
   while (remainingExpression) {
     const nextOperator = getOperator();
-    const previousOperator = operatorStack[operatorStack.length - 1] || null;
+    const previousOperator = operators[operators.length - 1] || null;
     if (
       previousOperator &&
       previousOperatorTakesPrecedent(previousOperator.value, nextOperator.value)
     ) {
-      outputStack = [...outputStack, ...operatorStack.reverse()]; // Disgusting mutating method
-      operatorStack = [];
+      [output, operators] = addOperatorsToOutput(output, operators);
     }
-    operatorStack = [...operatorStack, nextOperator];
-    outputStack = [...outputStack, ...getValue()];
+    operators = [...operators, nextOperator];
+    output = [...output, ...getValue()];
   }
 
-  outputStack = [...outputStack, ...operatorStack.reverse()]; // Disgusting mutating method
+  [output, operators] = addOperatorsToOutput(output, operators);
 
-  return outputStack;
+  return output;
 };

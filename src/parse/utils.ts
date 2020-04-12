@@ -1,6 +1,28 @@
-import { Token, Tokens, TokenSets, Operators } from '../types';
+import {
+  Token,
+  Tokens,
+  TokenSets,
+  Operators,
+  PostfixExpression,
+  OperatorStack,
+  OperatorToken,
+} from '../types';
 
 import { OPERATOR_PRECEDENCE } from './const';
+
+export const addOperatorsToOutput = (
+  output: PostfixExpression,
+  operators: OperatorStack,
+): [PostfixExpression, OperatorStack] => [
+  [
+    ...output,
+    ...operators.reduceRight<OperatorStack>(
+      (acc, operator: OperatorToken) => [...acc, operator],
+      [],
+    ),
+  ],
+  [],
+];
 
 export const previousOperatorTakesPrecedent = (
   previousOperator: Operators,
