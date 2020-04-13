@@ -1,26 +1,25 @@
 import { parse } from '../parse/parse';
-import { PostfixExpression, Tokens, Operators } from '../types';
+import { BooleanMap, PostfixExpression, Tokens, Operators } from '../types';
 
 import { OPERATOR_MAP } from './const';
 import { notUtil } from './utils';
 
-type BooleanMap = Record<string, boolean>;
 type EvaluatorFunction = (booleanMap: BooleanMap) => boolean;
 
 // Dear god come up with a better name for this function before exporting publically
 export const getEvaluator = (expression: string): EvaluatorFunction => {
   const parsedExpression = parse(expression);
 
-  return booleanMap => evaluateExpression(parsedExpression, booleanMap);
+  return booleanMap => evaluate(parsedExpression, booleanMap);
 };
 
-export const evaluateExpression = (
+export const evaluate = (
   expression: PostfixExpression,
   booleanMap: BooleanMap,
 ): boolean => {
   if (!Array.isArray(expression)) {
     throw new Error(
-      `${expression} should be an array. evaluateExpression takes in a parsed expression. Use in combination with parse or use getEvaluator`,
+      `${expression} should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator`,
     );
   }
 

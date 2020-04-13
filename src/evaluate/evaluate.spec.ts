@@ -1,6 +1,6 @@
 import { Operators, Tokens } from '../types';
 
-import { evaluateExpression, getEvaluator } from './evaluate';
+import { evaluate, getEvaluator } from './evaluate';
 
 const BOOLEAN_MAP = {
   true: true,
@@ -17,9 +17,9 @@ describe('getEvaluator', () => {
   });
 });
 
-describe('evaluateExpression', () => {
+describe('evaluate', () => {
   test('should return false for simple parsedExpression', () => {
-    const result = evaluateExpression(
+    const result = evaluate(
       [
         { name: Tokens.OPERAND, value: 'true' },
         { name: Tokens.OPERAND, value: 'false' },
@@ -32,7 +32,7 @@ describe('evaluateExpression', () => {
   });
 
   test('should return true for a complex expression', () => {
-    const result = evaluateExpression(
+    const result = evaluate(
       [
         { name: Tokens.OPERAND, value: 'false' },
         { name: Tokens.OPERATOR, value: Operators.NOT },
@@ -53,19 +53,19 @@ describe('evaluateExpression', () => {
 
   test('should throw if the expression passed is not an array', () => {
     expect(() => {
-      evaluateExpression(null, BOOLEAN_MAP);
+      evaluate(null, BOOLEAN_MAP);
     }).toThrow(
-      'null should be an array. evaluateExpression takes in a parsed expression. Use in combination with parse or use getEvaluator',
+      'null should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator',
     );
   });
 
   test('should throw if the expression contains incorrectly typed tokens', () => {
     expect(() => {
-      evaluateExpression([null], BOOLEAN_MAP);
+      evaluate([null], BOOLEAN_MAP);
     }).toThrow('Invalid token: null. Found in parsed expression at index 0');
 
     expect(() => {
-      evaluateExpression([{ name: Tokens.OPERATOR, value: null }], BOOLEAN_MAP);
+      evaluate([{ name: Tokens.OPERATOR, value: null }], BOOLEAN_MAP);
     }).toThrow(
       'Invalid token: [object Object]. Found in parsed expression at index 0',
     );

@@ -49,3 +49,5 @@ export enum TokenSets {
   OPERATOR,
   OPERATOR_OR_CLOSE,
 }
+
+export type BooleanMap = Record<string, boolean>;
