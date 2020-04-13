@@ -151,4 +151,98 @@ describe('parse', () => {
       { name: Tokens.OPERATOR, value: Operators.AND },
     ]);
   });
+
+  test('should handle parentheses around an operator with lower precedence', () => {
+    const result = parse('(first OR second) AND third');
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+    ]);
+  });
+
+  test('should handle parentheses aat the end of an expression', () => {
+    const result = parse('first XOR (second AND third)');
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+    ]);
+  });
+
+  test('should handle parentheses at the end of an expression', () => {
+    const result = parse('first XOR (second AND third)');
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+    ]);
+  });
+
+  test('should handle parentheses in the middle of an expression', () => {
+    const result = parse('first XOR (second AND third) OR fourth');
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+    ]);
+  });
+
+  test('should handle a complicated expression with multiple NOT operators and parentheses', () => {
+    const result = parse(
+      'NOT (first AND second AND NOT third) XOR (NOT fourth XOR fifth)',
+    );
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERAND, value: 'fifth' },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+    ]);
+  });
+
+  test('should handle nested parentheses', () => {
+    const result = parse(
+      'NOT ((first OR second) AND NOT third) XOR (NOT fourth AND fifth)',
+    );
+    expect(result).toEqual([
+      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.OPERATOR, value: Operators.OR },
+      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.OPERATOR, value: Operators.NOT },
+      { name: Tokens.OPERAND, value: 'fifth' },
+      { name: Tokens.OPERATOR, value: Operators.AND },
+      { name: Tokens.OPERATOR, value: Operators.XOR },
+    ]);
+  });
+
+  test('should throw if parentheses are not balanced', () => {
+    expect(() => {
+      parse(
+        'NOT ((first OR second) AND NOT third)) XOR (NOT fourth AND fifth)',
+      );
+    }).toThrow('Invalid token');
+  });
 });

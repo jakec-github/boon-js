@@ -6,6 +6,7 @@ import {
   OperatorStack,
   OperatorToken,
   Operators,
+  Tokens,
 } from '../types';
 
 import {
@@ -14,7 +15,15 @@ import {
   validateToken,
 } from './utils';
 
-export const parse = (expression: string): PostfixExpression => {
+// TODO: Must make sure to test an expression ending in a close parenthesis
+export const parse = (expression: string): PostfixExpression =>
+  parseInternal(expression)[0];
+
+const parseInternal = (
+  expression: string,
+  nested = false,
+): [PostfixExpression, string] => {
+  // This gets weird when we go recursive so intend to remove
   let remainingExpression = expression;
 
   // This should be a generic for full type safety
@@ -30,25 +39,45 @@ export const parse = (expression: string): PostfixExpression => {
     return token;
   };
 
-  // This will later handle potential parentheses and negations
   const getValue = (): PostfixExpression => {
     const nextToken = getNextToken(TokenSets.OPERAND_OR_NOT);
 
+    if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
+      let value: PostfixExpression;
+      [value, remainingExpression] = parseInternal(remainingExpression, true);
+      return value;
+    }
+
     if (nextToken.value === Operators.NOT) {
-      return [getNextToken(TokenSets.OPERAND), nextToken];
+      const tokenAfterNot = getNextToken(TokenSets.OPERAND);
+      if (tokenAfterNot.name === Tokens.SPECIAL_CHARACTER) {
+        let valueInner: PostfixExpression;
+        [valueInner, remainingExpression] = parseInternal(
+          remainingExpression,
+          true,
+        );
+        return [...valueInner, nextToken];
+      }
+
+      return [tokenAfterNot, nextToken];
     }
     return [nextToken];
   };
-
-  // This type casting should be solvable using a generic
-  const getOperator = (): OperatorToken =>
-    getNextToken(TokenSets.OPERATOR) as OperatorToken;
 
   let output: PostfixExpression = [...getValue()];
   let operators: OperatorStack = [];
 
   while (remainingExpression) {
-    const nextOperator = getOperator();
+    const tokenSet = nested ? TokenSets.OPERATOR_OR_CLOSE : TokenSets.OPERATOR;
+    const nextToken = getNextToken(tokenSet);
+
+    if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
+      [output, operators] = addOperatorsToOutput(output, operators);
+      return [output, remainingExpression];
+    }
+    // This type casting should be solvable using a generic
+    const nextOperator = nextToken as OperatorToken;
+
     const previousOperator = operators[operators.length - 1] || null;
     if (
       previousOperator &&
@@ -61,6 +90,5 @@ export const parse = (expression: string): PostfixExpression => {
   }
 
   [output, operators] = addOperatorsToOutput(output, operators);
-
-  return output;
+  return [output, null];
 };

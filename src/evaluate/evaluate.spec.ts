@@ -1,11 +1,21 @@
 import { Operators, Tokens } from '../types';
 
-import { evaluateExpression } from './evaluate';
+import { evaluateExpression, getEvaluator } from './evaluate';
 
 const BOOLEAN_MAP = {
   true: true,
   false: false,
 };
+
+describe('getEvaluator', () => {
+  test('should handle a complicated expression', () => {
+    const result = getEvaluator(
+      'NOT (true AND true AND NOT true) XOR (NOT false XOR false)',
+    )(BOOLEAN_MAP);
+
+    expect(result).toEqual(false);
+  });
+});
 
 describe('evaluateExpression', () => {
   test('should return false for simple parsedExpression', () => {

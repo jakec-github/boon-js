@@ -47,4 +47,5 @@ export enum TokenSets {
   OPERAND,
   OPERAND_OR_NOT,
   OPERATOR,
+  OPERATOR_OR_CLOSE,
 }

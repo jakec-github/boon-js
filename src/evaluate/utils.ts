@@ -1,5 +1,3 @@
-import { Operators } from '../types';
-
 export type OperatorUtil = (left: boolean, right: boolean) => boolean;
 
 export const andUtil: OperatorUtil = (left, right) => left && right;
