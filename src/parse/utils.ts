@@ -1,3 +1,4 @@
+import { lex } from '../lex/lex';
 import {
   Token,
   Tokens,
@@ -24,6 +25,21 @@ export const addOperatorsToOutput = (
   ],
   [],
 ];
+
+// This should be a generic for full type safety
+export const getNextToken = (
+  expectedTokenSet: TokenSets,
+  remainingExpression: string,
+): [Token, string] => {
+  if (!remainingExpression) {
+    throw new Error('Unexpected end of expression');
+  }
+  const { token, remainingString } = lex(remainingExpression);
+
+  validateToken(token, expectedTokenSet);
+
+  return [token, remainingString];
+};
 
 export const previousOperatorTakesPrecedent = (
   previousOperator: Operators,

@@ -1,4 +1,3 @@
-import { lex } from '../lex/lex';
 import {
   TokenSets,
   Token,
@@ -12,7 +11,7 @@ import {
 import {
   addOperatorsToOutput,
   previousOperatorTakesPrecedent,
-  validateToken,
+  getNextToken,
 } from './utils';
 
 // TODO: Must make sure to test an expression ending in a close parenthesis
@@ -23,45 +22,32 @@ const parseInternal = (
   expression: string,
   nested = false,
 ): [PostfixExpression, string] => {
-  // This gets weird when we go recursive so intend to remove
   let remainingExpression = expression;
 
-  // This should be a generic for full type safety
-  const getNextToken = (expectedTokenSet: TokenSets): Token => {
-    if (!remainingExpression) {
-      throw new Error('Unexpected end of expression');
-    }
-    const { token, remainingString } = lex(remainingExpression);
-    remainingExpression = remainingString;
-
-    validateToken(token, expectedTokenSet);
-
-    return token;
-  };
-
   const getValue = (): PostfixExpression => {
-    const nextToken = getNextToken(TokenSets.OPERAND_OR_NOT);
+    let value: PostfixExpression;
+    let nextToken: Token;
+    [nextToken, remainingExpression] = getNextToken(
+      TokenSets.OPERAND_OR_NOT,
+      remainingExpression,
+    );
+    let negatedValue = nextToken.value === Operators.NOT;
+    if (negatedValue) {
+      [nextToken, remainingExpression] = getNextToken(
+        TokenSets.OPERAND,
+        remainingExpression,
+      );
+    }
 
     if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
-      let value: PostfixExpression;
       [value, remainingExpression] = parseInternal(remainingExpression, true);
-      return value;
+    } else {
+      value = [nextToken];
     }
 
-    if (nextToken.value === Operators.NOT) {
-      const tokenAfterNot = getNextToken(TokenSets.OPERAND);
-      if (tokenAfterNot.name === Tokens.SPECIAL_CHARACTER) {
-        let valueInner: PostfixExpression;
-        [valueInner, remainingExpression] = parseInternal(
-          remainingExpression,
-          true,
-        );
-        return [...valueInner, nextToken];
-      }
-
-      return [tokenAfterNot, nextToken];
-    }
-    return [nextToken];
+    return negatedValue
+      ? [...value, { name: Tokens.OPERATOR, value: Operators.NOT }]
+      : value;
   };
 
   let output: PostfixExpression = [...getValue()];
@@ -69,7 +55,11 @@ const parseInternal = (
 
   while (remainingExpression) {
     const tokenSet = nested ? TokenSets.OPERATOR_OR_CLOSE : TokenSets.OPERATOR;
-    const nextToken = getNextToken(tokenSet);
+    let nextToken: Token;
+    [nextToken, remainingExpression] = getNextToken(
+      tokenSet,
+      remainingExpression,
+    );
 
     if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
       [output, operators] = addOperatorsToOutput(output, operators);
