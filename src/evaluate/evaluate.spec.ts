@@ -50,4 +50,24 @@ describe('evaluateExpression', () => {
 
     expect(result).toEqual(true);
   });
+
+  test('should throw if the expression passed is not an array', () => {
+    expect(() => {
+      evaluateExpression(null, BOOLEAN_MAP);
+    }).toThrow(
+      'null should be an array. evaluateExpression takes in a parsed expression. Use in combination with parse or use getEvaluator',
+    );
+  });
+
+  test('should throw if the expression contains incorrectly typed tokens', () => {
+    expect(() => {
+      evaluateExpression([null], BOOLEAN_MAP);
+    }).toThrow('Invalid token: null. Found in parsed expression at index 0');
+
+    expect(() => {
+      evaluateExpression([{ name: Tokens.OPERATOR, value: null }], BOOLEAN_MAP);
+    }).toThrow(
+      'Invalid token: [object Object]. Found in parsed expression at index 0',
+    );
+  });
 });

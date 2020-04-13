@@ -17,8 +17,23 @@ export const getEvaluator = (expression: string): EvaluatorFunction => {
 export const evaluateExpression = (
   expression: PostfixExpression,
   booleanMap: BooleanMap,
-): boolean =>
-  expression.reduce<boolean[]>((acc, token) => {
+): boolean => {
+  if (!Array.isArray(expression)) {
+    throw new Error(
+      `${expression} should be an array. evaluateExpression takes in a parsed expression. Use in combination with parse or use getEvaluator`,
+    );
+  }
+
+  return expression.reduce<boolean[]>((acc, token, i) => {
+    if (
+      !token ||
+      typeof token.name !== 'string' ||
+      typeof token.value !== 'string'
+    ) {
+      throw new Error(
+        `Invalid token: ${token}. Found in parsed expression at index ${i}`,
+      );
+    }
     if (token.name === Tokens.OPERAND) {
       return [...acc, Boolean(booleanMap[token.value])];
     }
@@ -30,3 +45,4 @@ export const evaluateExpression = (
           OPERATOR_MAP[token.value](secondLastItem, lastItem),
         ];
   }, [])[0];
+};

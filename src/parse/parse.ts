@@ -14,8 +14,13 @@ import {
   getNextToken,
 } from './utils';
 
-export const parse = (expression: string): PostfixExpression =>
-  parseInternal(expression)[0];
+export const parse = (expression: string): PostfixExpression => {
+  if (typeof expression !== 'string') {
+    throw new Error(`Expected string but received ${typeof expression}`);
+  }
+
+  return parseInternal(expression)[0];
+};
 
 const parseInternal = (
   expression: string,

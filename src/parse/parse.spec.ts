@@ -245,4 +245,10 @@ describe('parse', () => {
       );
     }).toThrow('Invalid token');
   });
+
+  test('should throw if argument is not a string', () => {
+    expect(() => {
+      parse(null);
+    }).toThrow('Expected string but received object');
+  });
 });
