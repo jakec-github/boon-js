@@ -14,7 +14,6 @@ import {
   getNextToken,
 } from './utils';
 
-// TODO: Must make sure to test an expression ending in a close parenthesis
 export const parse = (expression: string): PostfixExpression =>
   parseInternal(expression)[0];
 
