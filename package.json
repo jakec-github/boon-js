@@ -4,15 +4,34 @@
   "description": "A parser and evaluator for boolean expression written using the boon format",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --collect-coverage",
+    "build": "tsc",
+    "prepare": "tsc",
+    "prepublishOnly": "jest"
   },
-  "author": "jakec",
+  "author": "Jake Chorley",
   "license": "MIT",
   "private": false,
+  "files": [
+    "lib/**/*"
+  ],
+  "types": "lib/index.d.ts",
   "devDependencies": {
     "@types/jest": "^25.1.2",
     "jest": "^25.1.0",
     "ts-jest": "^25.2.0",
     "typescript": "^3.7.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakec-github/boon-js.git"
+  },
+  "keywords": [
+    "boolean",
+    "expression",
+    "evaluator",
+    "parser",
+    "boon"
+  ]
 }
