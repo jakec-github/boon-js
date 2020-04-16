@@ -16,6 +16,7 @@ export enum Tokens {
   OPERAND = 'OPERAND',
   OPERATOR = 'OPERATOR',
   SPECIAL_CHARACTER = 'SPECIAL_CHARACTER',
+  EOF = 'EOF',
 }
 
 interface TokenBase {
@@ -31,7 +32,11 @@ interface SpecialCharacterToken extends TokenBase {
   value: SpecialCharacters;
 }
 
-export type Token = OperatorToken | OperandToken | SpecialCharacterToken;
+export type Token =
+  | TokenBase
+  | OperatorToken
+  | OperandToken
+  | SpecialCharacterToken;
 
 export interface LexResult {
   token: Token;

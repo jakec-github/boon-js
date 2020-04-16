@@ -13,4 +13,4 @@ export const OPERATORS: Record<string, Operators> = {
 };
 
 // TODO: Add all space characters
-export const DELIMITERS = new Set([' ', '\n']);
+export const DELIMITERS = [' ', '\n', '\t'];

@@ -1,4 +1,3 @@
-import { PROJECT_NAME } from '../const';
 import { Tokens } from '../types';
 
 import { lex } from './lex';
@@ -82,13 +81,11 @@ describe('lex', () => {
     });
   });
 
-  test('should throw if no token is found', () => {
+  test('should just return an EOF token when to tokens are found', () => {
     const tests = [emptyString, whitespace, severalWhitespaces, newLine];
 
-    tests.forEach(expression => {
-      expect(() => {
-        lex(expression);
-      }).toThrow(`Invalid ${PROJECT_NAME}: No tokens found`);
+    tests.forEach((expression) => {
+      expect(lexEntireExpression(expression)).toEqual([{ name: Tokens.EOF }]);
     });
   });
 });

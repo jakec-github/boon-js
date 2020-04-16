@@ -1,10 +1,15 @@
-import { DELIMITERS, SPECIAL_CHARACTERS } from './const';
+export const findNextMatch = (
+  expression: string,
+  characters: string[],
+  returnOnMatch = true,
+): number => {
+  const charSet = new Set(characters);
 
-// TODO: Add tests to this function
-export const findNextDelimiter = (expression: string): number => {
-  const nextDelimiterIndex = expression
-    .split('')
-    .findIndex(char => DELIMITERS.has(char) || SPECIAL_CHARACTERS[char]);
+  for (let i = 0; i < expression.length; i += 1) {
+    if (charSet.has(expression[i]) === returnOnMatch) {
+      return i;
+    }
+  }
 
-  return nextDelimiterIndex === -1 ? expression.length : nextDelimiterIndex;
+  return expression.length;
 };
