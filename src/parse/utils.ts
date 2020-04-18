@@ -6,15 +6,12 @@ import { OPERATOR_PRECEDENCE, VALID_TOKENS } from './const';
 export const addOperatorsToOutput = (
   output: PostfixExpression,
   operators: PostfixExpression,
-): [PostfixExpression, PostfixExpression] => [
-  [
-    ...output,
-    ...operators.reduceRight<PostfixExpression>(
-      (acc, operator) => [...acc, operator],
-      [],
-    ),
-  ],
-  [],
+): PostfixExpression => [
+  ...output,
+  ...operators.reduce<PostfixExpression>(
+    (acc, operator) => [operator, ...acc],
+    [],
+  ),
 ];
 
 export type GetNextToken = (
