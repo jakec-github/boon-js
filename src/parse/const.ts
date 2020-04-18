@@ -1,4 +1,4 @@
-import { Tokens } from '../types';
+import { Token, Operators, Tokens, SpecialCharacters } from '../types';
 
 export const OPERATOR_PRECEDENCE = {
   NOT: 0,
@@ -7,10 +7,34 @@ export const OPERATOR_PRECEDENCE = {
   OR: 3,
 };
 
-// For use in errors
-// Not exported as not currently used
-const TOKEN_DISPLAY_NAMES = {
-  [Tokens.OPERAND]: 'variable',
-  [Tokens.OPERATOR]: 'operator',
-  [Tokens.SPECIAL_CHARACTER]: 'special character',
+export const VALID_TOKENS: Record<string, Token[]> = {
+  operandOnly: [
+    { name: Tokens.OPERAND },
+    {
+      name: Tokens.SPECIAL_CHARACTER,
+      value: SpecialCharacters.OPEN_PARENTHESIS,
+    },
+  ],
+  operandOrNot: [
+    { name: Tokens.OPERAND },
+    {
+      name: Tokens.SPECIAL_CHARACTER,
+      value: SpecialCharacters.OPEN_PARENTHESIS,
+    },
+    { name: Tokens.OPERATOR, value: Operators.NOT },
+  ],
+  binaryOperator: [
+    { name: Tokens.OPERATOR, value: Operators.AND },
+    { name: Tokens.OPERATOR, value: Operators.OR },
+    { name: Tokens.OPERATOR, value: Operators.XOR },
+  ],
+  binaryOperatorOrClose: [
+    { name: Tokens.OPERATOR, value: Operators.AND },
+    { name: Tokens.OPERATOR, value: Operators.OR },
+    { name: Tokens.OPERATOR, value: Operators.XOR },
+    {
+      name: Tokens.SPECIAL_CHARACTER,
+      value: SpecialCharacters.CLOSE_PARENTHESIS,
+    },
+  ],
 };

@@ -1,5 +1,3 @@
-// This type may need to be exported publicly since
-// it is found in the result
 export enum Operators {
   AND = 'AND',
   OR = 'OR',
@@ -19,43 +17,20 @@ export enum Tokens {
   EOF = 'EOF',
 }
 
-interface TokenEOF {
-  name: Tokens.EOF;
+export interface Token {
+  name:
+    | Tokens.EOF
+    | Tokens.OPERAND
+    | Tokens.OPERATOR
+    | Tokens.SPECIAL_CHARACTER;
+  value?: string | Operators | SpecialCharacters;
 }
-export interface OperatorToken {
-  name: Tokens.OPERATOR;
-  value: Operators;
-}
-export interface OperandToken {
-  name: Tokens.OPERAND;
-  value: string;
-}
-export interface SpecialCharacterToken {
-  name: Tokens.SPECIAL_CHARACTER;
-  value: SpecialCharacters;
-}
-
-export type Token =
-  | TokenEOF
-  | OperatorToken
-  | OperandToken
-  | SpecialCharacterToken;
 
 export interface LexResult {
   token: Token;
   remainingString: string;
 }
 
-export type PostfixToken = OperatorToken | OperandToken;
-
-export type PostfixExpression = PostfixToken[];
-export type OperatorStack = OperatorToken[];
-
-export enum TokenSets {
-  OPERAND,
-  OPERAND_OR_NOT,
-  OPERATOR,
-  OPERATOR_OR_CLOSE,
-}
+export type PostfixExpression = Token[];
 
 export type BooleanMap = Record<string, boolean>;

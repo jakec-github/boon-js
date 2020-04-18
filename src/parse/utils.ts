@@ -1,41 +1,35 @@
 import { lex } from '../lex/lex';
-import {
-  Token,
-  Tokens,
-  TokenSets,
-  Operators,
-  PostfixExpression,
-  OperatorStack,
-  OperatorToken,
-  SpecialCharacters,
-} from '../types';
+import { Token, Tokens, Operators, PostfixExpression } from '../types';
 
-import { OPERATOR_PRECEDENCE } from './const';
+import { OPERATOR_PRECEDENCE, VALID_TOKENS } from './const';
 
 export const addOperatorsToOutput = (
   output: PostfixExpression,
-  operators: OperatorStack,
-): [PostfixExpression, OperatorStack] => [
+  operators: PostfixExpression,
+): [PostfixExpression, PostfixExpression] => [
   [
     ...output,
-    ...operators.reduceRight<OperatorStack>(
-      (acc, operator: OperatorToken) => [...acc, operator],
+    ...operators.reduceRight<PostfixExpression>(
+      (acc, operator) => [...acc, operator],
       [],
     ),
   ],
   [],
 ];
 
-export type GetNextToken = (expectedTokenSet: TokenSets) => Token;
+export type GetNextToken = (
+  validTokens: Token[],
+  endIsValid?: boolean,
+) => Token;
 
 export const newTokenGenerator = (expression: string): GetNextToken => {
   let remainingExpression = expression;
 
-  return (expectedTokenSet) => {
+  return (validTokens, endIsValid = false) => {
     const { token, remainingString } = lex(remainingExpression);
     remainingExpression = remainingString;
 
-    validateToken(token, expectedTokenSet);
+    validateToken(token, validTokens, endIsValid);
 
     return token;
   };
@@ -45,10 +39,10 @@ export const getValue = (
   getNextToken: GetNextToken,
   parser: (getNextToken: GetNextToken, nested: boolean) => PostfixExpression,
 ): PostfixExpression => {
-  let nextToken = getNextToken(TokenSets.OPERAND_OR_NOT);
+  let nextToken = getNextToken(VALID_TOKENS.operandOrNot);
   let negatedValue = nextToken.value === Operators.NOT;
   if (negatedValue) {
-    nextToken = getNextToken(TokenSets.OPERAND);
+    nextToken = getNextToken(VALID_TOKENS.operandOnly);
   }
 
   const value: PostfixExpression =
@@ -69,47 +63,23 @@ export const previousOperatorTakesPrecedent = (
 
 export const validateToken = (
   token: Token,
-  expectedTokens: TokenSets,
-): void => {
-  if (
-    expectedTokens === TokenSets.OPERAND ||
-    expectedTokens === TokenSets.OPERAND_OR_NOT
-  ) {
-    if (token.name === Tokens.EOF) {
-      throw new Error('Unexpected end of expression');
-    } else {
-      if (
-        token.name === Tokens.OPERAND ||
-        ('value' in token && token.value === SpecialCharacters.OPEN_PARENTHESIS)
-      ) {
+  validTokens: Token[],
+  endIsValid = false,
+) => {
+  if (token.name === Tokens.EOF) {
+    if (endIsValid) {
+      return;
+    }
+    throw new Error('Unexpected end of expression');
+  }
+
+  for (let validToken of validTokens) {
+    if (validToken.name === token.name) {
+      if (!validToken.value || validToken.value === token.value) {
         return;
       }
-      if (
-        expectedTokens === TokenSets.OPERAND_OR_NOT &&
-        'value' in token &&
-        token.value === Operators.NOT
-      ) {
-        return;
-      }
-    }
-  } else {
-    if (
-      token.name === Tokens.OPERATOR &&
-      'value' in token &&
-      token.value !== Operators.NOT
-    ) {
-      return;
-    }
-    if (token.name === Tokens.EOF) {
-      return;
-    }
-    if (
-      expectedTokens === TokenSets.OPERATOR_OR_CLOSE &&
-      'value' in token &&
-      token.value === SpecialCharacters.CLOSE_PARENTHESIS
-    ) {
-      return;
     }
   }
+
   throw new TypeError('Invalid token');
 };

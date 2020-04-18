@@ -1,11 +1,6 @@
-import {
-  TokenSets,
-  PostfixExpression,
-  OperatorStack,
-  OperatorToken,
-  Tokens,
-} from '../types';
+import { PostfixExpression, Tokens, Operators } from '../types';
 
+import { VALID_TOKENS } from './const';
 import {
   addOperatorsToOutput,
   previousOperatorTakesPrecedent,
@@ -29,11 +24,13 @@ const parseInternal = (
   nested = false,
 ): PostfixExpression => {
   let output: PostfixExpression = [...getValue(getNextToken, parseInternal)];
-  let operators: OperatorStack = [];
+  let operators: PostfixExpression = [];
 
   while (true) {
-    const tokenSet = nested ? TokenSets.OPERATOR_OR_CLOSE : TokenSets.OPERATOR;
-    const nextToken = getNextToken(tokenSet);
+    const validTokens = nested
+      ? VALID_TOKENS.binaryOperatorOrClose
+      : VALID_TOKENS.binaryOperator;
+    const nextToken = getNextToken(validTokens, true);
     if (nextToken.name === Tokens.EOF) {
       break;
     }
@@ -42,13 +39,15 @@ const parseInternal = (
       [output, operators] = addOperatorsToOutput(output, operators);
       return output;
     }
-    // This type casting should be solvable using a generic
-    const nextOperator = nextToken as OperatorToken;
+    const nextOperator = nextToken;
 
     const previousOperator = operators[operators.length - 1] || null;
     if (
       previousOperator &&
-      previousOperatorTakesPrecedent(previousOperator.value, nextOperator.value)
+      previousOperatorTakesPrecedent(
+        previousOperator.value as Operators,
+        nextOperator.value as Operators,
+      )
     ) {
       [output, operators] = addOperatorsToOutput(output, operators);
     }
