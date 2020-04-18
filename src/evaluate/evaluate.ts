@@ -6,11 +6,10 @@ import { notUtil } from './utils';
 
 type EvaluatorFunction = (booleanMap: BooleanMap) => boolean;
 
-// Dear god come up with a better name for this function before exporting publically
 export const getEvaluator = (expression: string): EvaluatorFunction => {
   const parsedExpression = parse(expression);
 
-  return booleanMap => evaluate(parsedExpression, booleanMap);
+  return (booleanMap) => evaluate(parsedExpression, booleanMap);
 };
 
 export const evaluate = (
@@ -23,6 +22,10 @@ export const evaluate = (
     );
   }
 
+  // Evaluates each boolean and adds it to a stack
+  // When operand is found it operates on the top value(s)
+  // on the stack, removes them and replaces them with the
+  // result
   return expression.reduce<boolean[]>((acc, token, i) => {
     if (
       !token ||
