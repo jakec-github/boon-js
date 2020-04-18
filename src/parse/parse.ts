@@ -1,17 +1,17 @@
 import {
   TokenSets,
-  Token,
   PostfixExpression,
   OperatorStack,
   OperatorToken,
-  Operators,
   Tokens,
 } from '../types';
 
 import {
   addOperatorsToOutput,
   previousOperatorTakesPrecedent,
-  getNextToken,
+  newTokenGenerator,
+  GetNextToken,
+  getValue,
 } from './utils';
 
 export const parse = (expression: string): PostfixExpression => {
@@ -19,55 +19,28 @@ export const parse = (expression: string): PostfixExpression => {
     throw new Error(`Expected string but received ${typeof expression}`);
   }
 
-  return parseInternal(expression)[0];
+  const getNextToken = newTokenGenerator(expression);
+
+  return parseInternal(getNextToken);
 };
 
 const parseInternal = (
-  expression: string,
+  getNextToken: GetNextToken,
   nested = false,
-): [PostfixExpression, string] => {
-  let remainingExpression = expression;
-
-  const getValue = (): PostfixExpression => {
-    let value: PostfixExpression;
-    let nextToken: Token;
-    [nextToken, remainingExpression] = getNextToken(
-      TokenSets.OPERAND_OR_NOT,
-      remainingExpression,
-    );
-    let negatedValue = nextToken.value === Operators.NOT;
-    if (negatedValue) {
-      [nextToken, remainingExpression] = getNextToken(
-        TokenSets.OPERAND,
-        remainingExpression,
-      );
-    }
-
-    if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
-      [value, remainingExpression] = parseInternal(remainingExpression, true);
-    } else {
-      value = [nextToken];
-    }
-
-    return negatedValue
-      ? [...value, { name: Tokens.OPERATOR, value: Operators.NOT }]
-      : value;
-  };
-
-  let output: PostfixExpression = [...getValue()];
+): PostfixExpression => {
+  let output: PostfixExpression = [...getValue(getNextToken, parseInternal)];
   let operators: OperatorStack = [];
 
-  while (remainingExpression) {
+  while (true) {
     const tokenSet = nested ? TokenSets.OPERATOR_OR_CLOSE : TokenSets.OPERATOR;
-    let nextToken: Token;
-    [nextToken, remainingExpression] = getNextToken(
-      tokenSet,
-      remainingExpression,
-    );
+    const nextToken = getNextToken(tokenSet);
+    if (nextToken.name === Tokens.EOF) {
+      break;
+    }
 
     if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
       [output, operators] = addOperatorsToOutput(output, operators);
-      return [output, remainingExpression];
+      return output;
     }
     // This type casting should be solvable using a generic
     const nextOperator = nextToken as OperatorToken;
@@ -80,9 +53,9 @@ const parseInternal = (
       [output, operators] = addOperatorsToOutput(output, operators);
     }
     operators = [...operators, nextOperator];
-    output = [...output, ...getValue()];
+    output = [...output, ...getValue(getNextToken, parseInternal)];
   }
 
   [output, operators] = addOperatorsToOutput(output, operators);
-  return [output, null];
+  return output;
 };

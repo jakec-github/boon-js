@@ -19,21 +19,24 @@ export enum Tokens {
   EOF = 'EOF',
 }
 
-interface TokenBase {
-  name: Tokens;
+interface TokenEOF {
+  name: Tokens.EOF;
 }
-export interface OperatorToken extends TokenBase {
+export interface OperatorToken {
+  name: Tokens.OPERATOR;
   value: Operators;
 }
-interface OperandToken extends TokenBase {
+export interface OperandToken {
+  name: Tokens.OPERAND;
   value: string;
 }
-interface SpecialCharacterToken extends TokenBase {
+export interface SpecialCharacterToken {
+  name: Tokens.SPECIAL_CHARACTER;
   value: SpecialCharacters;
 }
 
 export type Token =
-  | TokenBase
+  | TokenEOF
   | OperatorToken
   | OperandToken
   | SpecialCharacterToken;
