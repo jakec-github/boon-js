@@ -39,7 +39,9 @@ export const evaluate = (
     if (token.name === Tokens.IDENTIFIER) {
       return [...acc, Boolean(booleanMap[token.value])];
     }
-    const [secondLastItem, lastItem] = acc.slice(-2);
+    const secondLastItem = acc[acc.length - 2];
+    const lastItem = acc[acc.length - 1];
+
     return token.value === Operators.NOT
       ? [...acc.slice(0, -1), notUtil(lastItem)]
       : [

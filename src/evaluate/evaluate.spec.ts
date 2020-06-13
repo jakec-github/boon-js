@@ -15,6 +15,14 @@ describe('getEvaluator', () => {
 
     expect(result).toEqual(false);
   });
+
+  test('should handle leading NOT operator', () => {
+    const result1 = getEvaluator('NOT true')(BOOLEAN_MAP);
+    const result2 = getEvaluator('NOT false')(BOOLEAN_MAP);
+
+    expect(result1).toEqual(false);
+    expect(result2).toEqual(true);
+  });
 });
 
 describe('evaluate', () => {
