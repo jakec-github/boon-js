@@ -27,42 +27,42 @@ export const severalWhitespaces = '          ';
 export const newLine = '\n';
 
 export const withSingleVariableAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.EOF },
 ];
 export const withAndOperatorAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.AND },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.EOF },
 ];
 export const withOrOperatorAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.OR },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.EOF },
 ];
 export const withParenthesesAnswer = [
   { name: Tokens.SPECIAL_CHARACTER, value: SpecialCharacters.OPEN_PARENTHESIS },
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.AND },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   {
     name: Tokens.SPECIAL_CHARACTER,
     value: SpecialCharacters.CLOSE_PARENTHESIS,
   },
   { name: Tokens.OPERATOR, value: Operators.OR },
-  { name: Tokens.OPERAND, value: 'third' },
+  { name: Tokens.IDENTIFIER, value: 'third' },
   { name: Tokens.EOF },
 ];
 export const withNestedParenthesesAnswer = [
   { name: Tokens.SPECIAL_CHARACTER, value: SpecialCharacters.OPEN_PARENTHESIS },
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.OR },
   { name: Tokens.SPECIAL_CHARACTER, value: SpecialCharacters.OPEN_PARENTHESIS },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.OPERATOR, value: Operators.AND },
-  { name: Tokens.OPERAND, value: 'third' },
+  { name: Tokens.IDENTIFIER, value: 'third' },
   {
     name: Tokens.SPECIAL_CHARACTER,
     value: SpecialCharacters.CLOSE_PARENTHESIS,
@@ -72,25 +72,25 @@ export const withNestedParenthesesAnswer = [
     value: SpecialCharacters.CLOSE_PARENTHESIS,
   },
   { name: Tokens.OPERATOR, value: Operators.AND },
-  { name: Tokens.OPERAND, value: 'fourth' },
+  { name: Tokens.IDENTIFIER, value: 'fourth' },
   { name: Tokens.EOF },
 ];
 export const withNotOperatorAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.AND },
   { name: Tokens.OPERATOR, value: Operators.NOT },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.EOF },
 ];
 export const withMultipleNestedNotOperatorsAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.AND },
   { name: Tokens.SPECIAL_CHARACTER, value: SpecialCharacters.OPEN_PARENTHESIS },
   { name: Tokens.OPERATOR, value: Operators.NOT },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.OPERATOR, value: Operators.OR },
   { name: Tokens.OPERATOR, value: Operators.NOT },
-  { name: Tokens.OPERAND, value: 'third' },
+  { name: Tokens.IDENTIFIER, value: 'third' },
   {
     name: Tokens.SPECIAL_CHARACTER,
     value: SpecialCharacters.CLOSE_PARENTHESIS,
@@ -98,20 +98,20 @@ export const withMultipleNestedNotOperatorsAnswer = [
   { name: Tokens.EOF },
 ];
 export const withXorOperatorAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.XOR },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.EOF },
 ];
 
 export const withSpacedParenthesesAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.AND },
   { name: Tokens.OPERATOR, value: Operators.NOT },
   { name: Tokens.SPECIAL_CHARACTER, value: SpecialCharacters.OPEN_PARENTHESIS },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.OPERATOR, value: Operators.OR },
-  { name: Tokens.OPERAND, value: 'third' },
+  { name: Tokens.IDENTIFIER, value: 'third' },
   {
     name: Tokens.SPECIAL_CHARACTER,
     value: SpecialCharacters.CLOSE_PARENTHESIS,
@@ -119,14 +119,14 @@ export const withSpacedParenthesesAnswer = [
   { name: Tokens.EOF },
 ];
 export const withLineBreaksAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.OR },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.OPERATOR, value: Operators.AND },
   { name: Tokens.SPECIAL_CHARACTER, value: SpecialCharacters.OPEN_PARENTHESIS },
-  { name: Tokens.OPERAND, value: 'third' },
+  { name: Tokens.IDENTIFIER, value: 'third' },
   { name: Tokens.OPERATOR, value: Operators.XOR },
-  { name: Tokens.OPERAND, value: 'fourth' },
+  { name: Tokens.IDENTIFIER, value: 'fourth' },
   {
     name: Tokens.SPECIAL_CHARACTER,
     value: SpecialCharacters.CLOSE_PARENTHESIS,
@@ -134,8 +134,8 @@ export const withLineBreaksAnswer = [
   { name: Tokens.EOF },
 ];
 export const withTrailingWhitespaceAnswer = [
-  { name: Tokens.OPERAND, value: 'first' },
+  { name: Tokens.IDENTIFIER, value: 'first' },
   { name: Tokens.OPERATOR, value: Operators.AND },
-  { name: Tokens.OPERAND, value: 'second' },
+  { name: Tokens.IDENTIFIER, value: 'second' },
   { name: Tokens.EOF },
 ];

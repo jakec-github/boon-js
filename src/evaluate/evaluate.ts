@@ -23,7 +23,7 @@ export const evaluate = (
   }
 
   // Evaluates each boolean and adds it to a stack
-  // When operand is found it operates on the top value(s)
+  // When operator is found it operates on the top value(s)
   // on the stack, removes them and replaces them with the
   // result
   return expression.reduce<boolean[]>((acc, token, i) => {
@@ -36,7 +36,7 @@ export const evaluate = (
         `Invalid token: ${token}. Found in parsed expression at index ${i}`,
       );
     }
-    if (token.name === Tokens.OPERAND) {
+    if (token.name === Tokens.IDENTIFIER) {
       return [...acc, Boolean(booleanMap[token.value])];
     }
     const [secondLastItem, lastItem] = acc.slice(-2);

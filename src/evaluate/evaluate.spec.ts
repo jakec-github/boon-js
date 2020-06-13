@@ -21,8 +21,8 @@ describe('evaluate', () => {
   test('should return false for simple parsedExpression', () => {
     const result = evaluate(
       [
-        { name: Tokens.OPERAND, value: 'true' },
-        { name: Tokens.OPERAND, value: 'false' },
+        { name: Tokens.IDENTIFIER, value: 'true' },
+        { name: Tokens.IDENTIFIER, value: 'false' },
         { name: Tokens.OPERATOR, value: Operators.AND },
       ],
       BOOLEAN_MAP,
@@ -34,13 +34,13 @@ describe('evaluate', () => {
   test('should return true for a complex expression', () => {
     const result = evaluate(
       [
-        { name: Tokens.OPERAND, value: 'false' },
+        { name: Tokens.IDENTIFIER, value: 'false' },
         { name: Tokens.OPERATOR, value: Operators.NOT },
-        { name: Tokens.OPERAND, value: 'true' },
+        { name: Tokens.IDENTIFIER, value: 'true' },
         { name: Tokens.OPERATOR, value: Operators.AND },
-        { name: Tokens.OPERAND, value: 'false' },
+        { name: Tokens.IDENTIFIER, value: 'false' },
         { name: Tokens.OPERATOR, value: Operators.NOT },
-        { name: Tokens.OPERAND, value: 'true' },
+        { name: Tokens.IDENTIFIER, value: 'true' },
         { name: Tokens.OPERATOR, value: Operators.NOT },
         { name: Tokens.OPERATOR, value: Operators.XOR },
         { name: Tokens.OPERATOR, value: Operators.AND },

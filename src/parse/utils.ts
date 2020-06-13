@@ -36,10 +36,10 @@ export const getValue = (
   getNextToken: GetNextToken,
   parser: (getNextToken: GetNextToken, nested: boolean) => PostfixExpression,
 ): PostfixExpression => {
-  let nextToken = getNextToken(VALID_TOKENS.operandOrNot);
+  let nextToken = getNextToken(VALID_TOKENS.identifierOrNot);
   let negatedValue = nextToken.value === Operators.NOT;
   if (negatedValue) {
-    nextToken = getNextToken(VALID_TOKENS.operandOnly);
+    nextToken = getNextToken(VALID_TOKENS.identifierOnly);
   }
 
   const value: PostfixExpression =

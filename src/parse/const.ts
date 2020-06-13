@@ -8,15 +8,15 @@ export const OPERATOR_PRECEDENCE = {
 };
 
 export const VALID_TOKENS: Record<string, Token[]> = {
-  operandOnly: [
-    { name: Tokens.OPERAND },
+  identifierOnly: [
+    { name: Tokens.IDENTIFIER },
     {
       name: Tokens.SPECIAL_CHARACTER,
       value: SpecialCharacters.OPEN_PARENTHESIS,
     },
   ],
-  operandOrNot: [
-    { name: Tokens.OPERAND },
+  identifierOrNot: [
+    { name: Tokens.IDENTIFIER },
     {
       name: Tokens.SPECIAL_CHARACTER,
       value: SpecialCharacters.OPEN_PARENTHESIS,

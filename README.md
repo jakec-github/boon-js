@@ -124,7 +124,7 @@ tyrannosaurus-rex XOR (
 
 ## Under the hood
 
-boon-js uses a lexer to produce a token stream from an expression string. This token stream is then fed to a parser. This parser uses Djikstra's shunting yard algorithm to convert the token stream to an array of tokens arranged using postfix notation. Once the operands are resolvable the evaluate function uses the postfix expression to compute a result
+boon-js uses a lexer to produce a token stream from an expression string. This token stream is then fed to a parser. This parser uses Djikstra's shunting yard algorithm to convert the token stream to an array of tokens arranged using postfix notation. Once the identifiers are resolvable the evaluate function uses the postfix expression to compute a result
 
 ## License
 

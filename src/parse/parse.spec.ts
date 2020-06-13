@@ -6,15 +6,15 @@ describe('parse', () => {
   test('should parse a single value', () => {
     const result = parse('first');
 
-    expect(result).toEqual([{ name: Tokens.OPERAND, value: 'first' }]);
+    expect(result).toEqual([{ name: Tokens.IDENTIFIER, value: 'first' }]);
   });
 
   test('should parse a simple expression', () => {
     const result = parse('first AND second');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.AND },
     ]);
   });
@@ -47,10 +47,10 @@ describe('parse', () => {
     const result = parse('first AND second OR third');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.AND },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.OR },
     ]);
   });
@@ -59,10 +59,10 @@ describe('parse', () => {
     const result = parse('first AND second AND third');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.AND },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
     ]);
   });
@@ -71,12 +71,12 @@ describe('parse', () => {
     const result = parse('first XOR second AND third OR fourth');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.XOR },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.OR },
     ]);
   });
@@ -85,9 +85,9 @@ describe('parse', () => {
     const result = parse('first OR second AND third');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.OR },
     ]);
@@ -97,12 +97,12 @@ describe('parse', () => {
     const result = parse('first AND second XOR third OR fourth');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.XOR },
       { name: Tokens.OPERATOR, value: Operators.AND },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.OR },
     ]);
   });
@@ -111,10 +111,10 @@ describe('parse', () => {
     const result = parse('first OR second AND third XOR fourth');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
-      { name: Tokens.OPERAND, value: 'third' },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.XOR },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.OR },
@@ -125,7 +125,7 @@ describe('parse', () => {
     const result = parse('NOT first');
 
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
     ]);
   });
@@ -139,13 +139,13 @@ describe('parse', () => {
   test('should handle a complicated expression with multiple NOT operators', () => {
     const result = parse('NOT first AND second AND NOT third XOR NOT fourth');
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.AND },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
       { name: Tokens.OPERATOR, value: Operators.XOR },
       { name: Tokens.OPERATOR, value: Operators.AND },
@@ -155,10 +155,10 @@ describe('parse', () => {
   test('should handle parentheses around an operator with lower precedence', () => {
     const result = parse('(first OR second) AND third');
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.OR },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
     ]);
   });
@@ -166,9 +166,9 @@ describe('parse', () => {
   test('should handle parentheses aat the end of an expression', () => {
     const result = parse('first XOR (second AND third)');
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.XOR },
     ]);
@@ -177,9 +177,9 @@ describe('parse', () => {
   test('should handle parentheses at the end of an expression', () => {
     const result = parse('first XOR (second AND third)');
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.XOR },
     ]);
@@ -188,12 +188,12 @@ describe('parse', () => {
   test('should handle parentheses in the middle of an expression', () => {
     const result = parse('first XOR (second AND third) OR fourth');
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.XOR },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.OR },
     ]);
   });
@@ -203,16 +203,16 @@ describe('parse', () => {
       'NOT (first AND second AND NOT third) XOR (NOT fourth XOR fifth)',
     );
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.AND },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.NOT },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
-      { name: Tokens.OPERAND, value: 'fifth' },
+      { name: Tokens.IDENTIFIER, value: 'fifth' },
       { name: Tokens.OPERATOR, value: Operators.XOR },
       { name: Tokens.OPERATOR, value: Operators.XOR },
     ]);
@@ -223,16 +223,16 @@ describe('parse', () => {
       'NOT ((first OR second) AND NOT third) XOR (NOT fourth AND fifth)',
     );
     expect(result).toEqual([
-      { name: Tokens.OPERAND, value: 'first' },
-      { name: Tokens.OPERAND, value: 'second' },
+      { name: Tokens.IDENTIFIER, value: 'first' },
+      { name: Tokens.IDENTIFIER, value: 'second' },
       { name: Tokens.OPERATOR, value: Operators.OR },
-      { name: Tokens.OPERAND, value: 'third' },
+      { name: Tokens.IDENTIFIER, value: 'third' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.NOT },
-      { name: Tokens.OPERAND, value: 'fourth' },
+      { name: Tokens.IDENTIFIER, value: 'fourth' },
       { name: Tokens.OPERATOR, value: Operators.NOT },
-      { name: Tokens.OPERAND, value: 'fifth' },
+      { name: Tokens.IDENTIFIER, value: 'fifth' },
       { name: Tokens.OPERATOR, value: Operators.AND },
       { name: Tokens.OPERATOR, value: Operators.XOR },
     ]);

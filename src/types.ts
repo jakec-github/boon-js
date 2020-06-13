@@ -11,7 +11,7 @@ export enum SpecialCharacters {
 }
 
 export enum Tokens {
-  OPERAND = 'OPERAND',
+  IDENTIFIER = 'IDENTIFIER',
   OPERATOR = 'OPERATOR',
   SPECIAL_CHARACTER = 'SPECIAL_CHARACTER',
   EOF = 'EOF',
@@ -20,7 +20,7 @@ export enum Tokens {
 export interface Token {
   name:
     | Tokens.EOF
-    | Tokens.OPERAND
+    | Tokens.IDENTIFIER
     | Tokens.OPERATOR
     | Tokens.SPECIAL_CHARACTER;
   value?: string | Operators | SpecialCharacters;

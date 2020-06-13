@@ -56,7 +56,7 @@ export const lex = (expression: string): LexResult => {
   // Returns the LexResult
   return {
     token: {
-      name: Tokens.OPERAND,
+      name: Tokens.IDENTIFIER,
       value,
     },
     remainingString,
