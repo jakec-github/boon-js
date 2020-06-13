@@ -12,5 +12,9 @@ export const OPERATORS: Record<string, Operators> = {
   NOT: Operators.NOT,
 };
 
-// TODO: Add all space characters
-export const DELIMITERS = [' ', '\n', '\t'];
+export const SEPARATORS = [
+  0x0020, // Space
+  0x0009, // Character tabulation
+  0x000a, // Line feed
+  0x000d, // Carriage return
+].map((separator) => String.fromCodePoint(separator));

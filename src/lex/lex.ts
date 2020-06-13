@@ -1,12 +1,12 @@
 import { LexResult, Tokens } from '../types';
 
-import { SPECIAL_CHARACTERS, OPERATORS, DELIMITERS } from './const';
+import { SPECIAL_CHARACTERS, OPERATORS, SEPARATORS } from './const';
 import { findNextMatch } from './utils';
 
 const specialCharArray = Object.keys(SPECIAL_CHARACTERS);
 
 export const lex = (expression: string): LexResult => {
-  const nextCharIndex = findNextMatch(expression, DELIMITERS, false);
+  const nextCharIndex = findNextMatch(expression, SEPARATORS, false);
 
   // Throws error if there are no tokens in the expression
   if (expression.length === nextCharIndex) {
@@ -33,7 +33,7 @@ export const lex = (expression: string): LexResult => {
   // Finds the next delimiter or special character
   const nextDelimiterIndex =
     findNextMatch(expression.slice(nextCharIndex), [
-      ...DELIMITERS,
+      ...SEPARATORS,
       ...specialCharArray,
     ]) + nextCharIndex;
 
