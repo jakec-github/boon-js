@@ -36,10 +36,10 @@ const mysteryAnimal = {
   hasLotsOfTeeth: true,
 };
 
-velociraptorTest((mysteryAnimal); // Returns true
+velociraptorTest(mysteryAnimal); // Returns true
 
 // or invoke it immediately
-getEvaluator('unlocked AND open')({ unlocked: true}) // returns false
+getEvaluator('unlocked AND open')({ unlocked: true }); // returns false
 ```
 
 ## API reference
