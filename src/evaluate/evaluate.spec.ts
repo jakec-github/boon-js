@@ -1,4 +1,5 @@
-import { Operators, Tokens } from '../types';
+import { TRUE, FALSE, AND, NOT, XOR } from '../testConst';
+import { Tokens } from '../types';
 
 import { evaluate, getEvaluator } from './evaluate';
 
@@ -27,32 +28,14 @@ describe('getEvaluator', () => {
 
 describe('evaluate', () => {
   test('should return false for simple parsedExpression', () => {
-    const result = evaluate(
-      [
-        { name: Tokens.IDENTIFIER, value: 'true' },
-        { name: Tokens.IDENTIFIER, value: 'false' },
-        { name: Tokens.OPERATOR, value: Operators.AND },
-      ],
-      BOOLEAN_MAP,
-    );
+    const result = evaluate([TRUE, FALSE, AND], BOOLEAN_MAP);
 
     expect(result).toEqual(false);
   });
 
   test('should return true for a complex expression', () => {
     const result = evaluate(
-      [
-        { name: Tokens.IDENTIFIER, value: 'false' },
-        { name: Tokens.OPERATOR, value: Operators.NOT },
-        { name: Tokens.IDENTIFIER, value: 'true' },
-        { name: Tokens.OPERATOR, value: Operators.AND },
-        { name: Tokens.IDENTIFIER, value: 'false' },
-        { name: Tokens.OPERATOR, value: Operators.NOT },
-        { name: Tokens.IDENTIFIER, value: 'true' },
-        { name: Tokens.OPERATOR, value: Operators.NOT },
-        { name: Tokens.OPERATOR, value: Operators.XOR },
-        { name: Tokens.OPERATOR, value: Operators.AND },
-      ],
+      [FALSE, NOT, TRUE, AND, FALSE, NOT, TRUE, NOT, XOR, AND],
       BOOLEAN_MAP,
     );
 
@@ -76,6 +59,14 @@ describe('evaluate', () => {
       evaluate([{ name: Tokens.OPERATOR, value: null }], BOOLEAN_MAP);
     }).toThrow(
       'Invalid token: [object Object]. Found in parsed expression at index 0',
+    );
+  });
+
+  test('should throw if the expression is not a valid postfix expression', () => {
+    expect(() => {
+      evaluate([TRUE, TRUE, NOT], BOOLEAN_MAP);
+    }).toThrow(
+      'Invalid postfix expression: too many identifiers after evaluation',
     );
   });
 });
