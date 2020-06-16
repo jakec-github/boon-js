@@ -1,3 +1,5 @@
+import cases from 'jest-in-case';
+
 import {
   FIRST,
   SECOND,
@@ -9,94 +11,94 @@ import {
   XOR,
   OR,
 } from '../testConst';
+import { PostfixExpression } from '../types';
 
 import { parse } from './parse';
 
+interface EqualityTest {
+  expression: string;
+  postfix: PostfixExpression;
+}
+
+const checkEquality = ({ expression, postfix }: EqualityTest): void => {
+  expect(parse(expression)).toEqual(postfix);
+};
+
+interface ErrorTest {
+  expression: string;
+  message: string;
+}
+
+const checkError = ({ expression, message }: ErrorTest) => {
+  expect(() => {
+    parse(expression);
+  }).toThrow(message);
+};
+
 describe('parse', () => {
-  describe('basic tests', () => {
-    test('should parse a lone identifier', () => {
-      const result = parse('first');
+  const basicTests = {
+    'parse a lone identifier': {
+      expression: 'first',
+      postfix: [FIRST],
+    },
+    'parse a simple expression': {
+      expression: 'first AND second',
+      postfix: [FIRST, SECOND, AND],
+    },
+    'handle the NOT operator': {
+      expression: 'NOT first',
+      postfix: [FIRST, NOT],
+    },
+  };
 
-      expect(result).toEqual([FIRST]);
-    });
+  cases('basic tests', checkEquality, basicTests);
 
-    test('should parse a simple expression', () => {
-      const result = parse('first AND second');
+  const operatorPrecedence = {
+    'parse an expression with an AND then an OR operator': {
+      expression: 'first AND second OR third',
+      postfix: [FIRST, SECOND, AND, THIRD, OR],
+    },
+    'parse an expression with an AND then an AND operator': {
+      expression: 'first AND second AND third',
+      postfix: [FIRST, SECOND, AND, THIRD, AND],
+    },
+    'parse an expression with an XOR, AND then an OR operator': {
+      expression: 'first XOR second AND third OR fourth',
+      postfix: [FIRST, SECOND, XOR, THIRD, AND, FOURTH, OR],
+    },
+    'parse an expression with an OR then an AND operator': {
+      expression: 'first OR second AND third',
+      postfix: [FIRST, SECOND, THIRD, AND, OR],
+    },
+    'parse an expression with an AND then an XOR then an OR operator': {
+      expression: 'first AND second XOR third OR fourth',
+      postfix: [FIRST, SECOND, THIRD, XOR, AND, FOURTH, OR],
+    },
+    'parse an expression with an OR then an AND then an XOR operator': {
+      expression: 'first OR second AND third XOR fourth',
+      postfix: [FIRST, SECOND, THIRD, FOURTH, XOR, AND, OR],
+    },
+  };
 
-      expect(result).toEqual([FIRST, SECOND, AND]);
-    });
+  cases('operator precedence', checkEquality, operatorPrecedence);
 
-    test('should handle the NOT operator', () => {
-      const result = parse('NOT first');
-
-      expect(result).toEqual([FIRST, NOT]);
-    });
-  });
-
-  describe('operator precedence', () => {
-    test('should parse an expression with an AND then an OR operator', () => {
-      const result = parse('first AND second OR third');
-
-      expect(result).toEqual([FIRST, SECOND, AND, THIRD, OR]);
-    });
-
-    test('should parse an expression with an AND then an AND operator', () => {
-      const result = parse('first AND second AND third');
-
-      expect(result).toEqual([FIRST, SECOND, AND, THIRD, AND]);
-    });
-
-    test('should parse an expression with an XOR, AND then an OR operator', () => {
-      const result = parse('first XOR second AND third OR fourth');
-
-      expect(result).toEqual([FIRST, SECOND, XOR, THIRD, AND, FOURTH, OR]);
-    });
-
-    test('should parse an expression with an OR then an AND operator', () => {
-      const result = parse('first OR second AND third');
-
-      expect(result).toEqual([FIRST, SECOND, THIRD, AND, OR]);
-    });
-
-    test('should parse an expression with an AND then an XOR then an OR operator', () => {
-      const result = parse('first AND second XOR third OR fourth');
-
-      expect(result).toEqual([FIRST, SECOND, THIRD, XOR, AND, FOURTH, OR]);
-    });
-
-    test('should parse an expression with an OR then an AND then an XOR operator', () => {
-      const result = parse('first OR second AND third XOR fourth');
-
-      expect(result).toEqual([FIRST, SECOND, THIRD, FOURTH, XOR, AND, OR]);
-    });
-  });
-
-  describe('parentheses', () => {
-    test('should handle parentheses around an operator with lower precedence', () => {
-      const result = parse('(first OR second) AND third');
-      expect(result).toEqual([FIRST, SECOND, OR, THIRD, AND]);
-    });
-
-    test('should handle parentheses aat the end of an expression', () => {
-      const result = parse('first XOR (second AND third)');
-      expect(result).toEqual([FIRST, SECOND, THIRD, AND, XOR]);
-    });
-
-    test('should handle parentheses at the end of an expression', () => {
-      const result = parse('first XOR (second AND third)');
-      expect(result).toEqual([FIRST, SECOND, THIRD, AND, XOR]);
-    });
-
-    test('should handle parentheses in the middle of an expression', () => {
-      const result = parse('first XOR (second AND third) OR fourth');
-      expect(result).toEqual([FIRST, SECOND, THIRD, AND, XOR, FOURTH, OR]);
-    });
-
-    test('should handle nested parentheses', () => {
-      const result = parse(
+  const parentheses = {
+    'handle parentheses around an operator with lower precedence': {
+      expression: '(first OR second) AND third',
+      postfix: [FIRST, SECOND, OR, THIRD, AND],
+    },
+    'handle parentheses at the end of an expression': {
+      expression: 'first XOR (second AND third)',
+      postfix: [FIRST, SECOND, THIRD, AND, XOR],
+    },
+    'handle parentheses in the middle of an expression': {
+      expression: 'first XOR (second AND third) OR fourth',
+      postfix: [FIRST, SECOND, THIRD, AND, XOR, FOURTH, OR],
+    },
+    'handle nested parentheses': {
+      expression:
         'NOT ((first OR second) AND NOT third) XOR (NOT fourth AND fifth)',
-      );
-      expect(result).toEqual([
+      postfix: [
         FIRST,
         SECOND,
         OR,
@@ -109,32 +111,21 @@ describe('parse', () => {
         FIFTH,
         AND,
         XOR,
-      ]);
-    });
-  });
+      ],
+    },
+  };
 
-  describe('complex tests', () => {
-    test('should handle a complicated expression with multiple NOT operators', () => {
-      const result = parse('NOT first AND second AND NOT third XOR NOT fourth');
-      expect(result).toEqual([
-        FIRST,
-        NOT,
-        SECOND,
-        AND,
-        THIRD,
-        NOT,
-        FOURTH,
-        NOT,
-        XOR,
-        AND,
-      ]);
-    });
+  cases('parentheses', checkEquality, parentheses);
 
-    test('should handle a complicated expression with multiple NOT operators and parentheses', () => {
-      const result = parse(
+  const complexTests = {
+    'handle a complicated expression with multiple NOT operators': {
+      expression: 'NOT first AND second AND NOT third XOR NOT fourth',
+      postfix: [FIRST, NOT, SECOND, AND, THIRD, NOT, FOURTH, NOT, XOR, AND],
+    },
+    'handle a complicated expression with multiple NOT operators and parentheses': {
+      expression:
         'NOT (first AND second AND NOT third) XOR (NOT fourth XOR fifth)',
-      );
-      expect(result).toEqual([
+      postfix: [
         FIRST,
         SECOND,
         AND,
@@ -147,53 +138,43 @@ describe('parse', () => {
         FIFTH,
         XOR,
         XOR,
-      ]);
-    });
-  });
+      ],
+    },
+  };
 
-  describe('unhappy path', () => {
-    test('should throw if terms are out of order', () => {
-      expect(() => {
-        parse('AND first second');
-      }).toThrow('Invalid token');
-    });
+  cases('complex tests', checkEquality, complexTests);
 
-    test('should throw if the second term is missing', () => {
-      expect(() => {
-        parse('first AND');
-      }).toThrow('Unexpected end of expression');
-    });
+  const unhappyTests = {
+    'throw if terms are out of order': {
+      expression: 'AND first second',
+      message: 'Invalid token',
+    },
+    'throw if the second term is missing': {
+      expression: 'first AND',
+      message: 'Unexpected end of expression',
+    },
+    'throw if the operator is repeated': {
+      expression: 'first AND AND second',
+      message: 'Invalid token',
+    },
+    'throw from an expression with an OR then a hanging AND operator': {
+      expression: 'first OR second AND ',
+      message: 'Unexpected end of expression',
+    },
+    'throw on two NOT operators in a row': {
+      expression: 'NOT NOT',
+      message: 'Invalid token',
+    },
+    'throw if parentheses are not balanced': {
+      expression:
+        'NOT ((first OR second) AND NOT third)) XOR (NOT fourth AND fifth)',
+      message: 'Invalid token',
+    },
+    'throw if argument is not a string': {
+      expression: null as string,
+      message: 'Expected string but received object',
+    },
+  };
 
-    test('should throw if the operator is repeated', () => {
-      expect(() => {
-        parse('first AND AND second');
-      }).toThrow('Invalid token');
-    });
-
-    test('should throw from an expression with an OR then a hanging AND operator', () => {
-      expect(() => {
-        parse('first OR second AND ');
-      }).toThrow('Unexpected end of expression');
-    });
-
-    test('should throw on two NOT operators in a row', () => {
-      expect(() => {
-        parse('NOT NOT');
-      }).toThrow('Invalid token');
-    });
-
-    test('should throw if parentheses are not balanced', () => {
-      expect(() => {
-        parse(
-          'NOT ((first OR second) AND NOT third)) XOR (NOT fourth AND fifth)',
-        );
-      }).toThrow('Invalid token');
-    });
-
-    test('should throw if argument is not a string', () => {
-      expect(() => {
-        parse(null);
-      }).toThrow('Expected string but received object');
-    });
-  });
+  cases('Unhappy path', checkError, unhappyTests);
 });

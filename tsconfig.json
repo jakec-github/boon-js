@@ -3,6 +3,7 @@
     "lib": ["ES2018", "dom"],
     "noImplicitAny": true,
     "declaration": true,
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "esModuleInterop": true
   }
 }
