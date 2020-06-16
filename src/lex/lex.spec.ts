@@ -55,7 +55,7 @@ describe('lex', () => {
     expect(result).toEqual(withSingleVariableAnswer);
   });
 
-  test('should lex a expressions with any sequence of tokens', () => {
+  test('should lex expressions with any sequence of tokens', () => {
     const tests = {
       [withParentheses]: withParenthesesAnswer,
       [withNestedParentheses]: withNestedParenthesesAnswer,
@@ -81,7 +81,7 @@ describe('lex', () => {
     });
   });
 
-  test('should just return an EOF token when to tokens are found', () => {
+  test('should just return an EOF token when no tokens are found', () => {
     const tests = [emptyString, whitespace, severalWhitespaces, newLine];
 
     tests.forEach((expression) => {

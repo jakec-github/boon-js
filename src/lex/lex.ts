@@ -8,7 +8,6 @@ const specialCharArray = Object.keys(SPECIAL_CHARACTERS);
 export const lex = (expression: string): LexResult => {
   const nextCharIndex = findNextMatch(expression, SEPARATORS, false);
 
-  // Throws error if there are no tokens in the expression
   if (expression.length === nextCharIndex) {
     // Will return EOF here
     return {
