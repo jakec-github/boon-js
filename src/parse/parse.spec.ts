@@ -29,7 +29,7 @@ interface ErrorTest {
   message: string;
 }
 
-const checkError = ({ expression, message }: ErrorTest) => {
+const checkError = ({ expression, message }: ErrorTest): void => {
   expect(() => {
     parse(expression);
   }).toThrow(message);
