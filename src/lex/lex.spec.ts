@@ -1,91 +1,99 @@
-import { Tokens } from '../types';
+import cases from 'jest-in-case';
+
+import { Token, Tokens } from '../types';
 
 import { lex } from './lex';
 import {
-  withSingleVariable,
-  withSingleVariableAnswer,
-  withAndOperator,
-  withNestedParentheses,
-  withOrOperator,
-  withOrOperatorAnswer,
-  withParentheses,
-  withParenthesesAnswer,
-  withNestedParenthesesAnswer,
-  withNotOperator,
-  withNotOperatorAnswer,
-  withMultipleNestedNotOperators,
-  withMultipleNestedNotOperatorsAnswer,
-  withXorOperator,
-  withXorOperatorAnswer,
-  withSpacedParentheses,
-  withSpacedParenthesesAnswer,
-  withLineBreaks,
-  withLineBreaksAnswer,
-  withTrailingWhitespace,
-  withTrailingWhitespaceAnswer,
-  emptyString,
-  whitespace,
-  newLine,
-  severalWhitespaces,
+  basicTests,
+  identifierTests,
+  specialCharacterTests,
+  commentTests,
+  remainingStringTests,
+  complexTests,
+  unhappyTests,
 } from './testData';
-import { lexEntireExpression } from './testUtils';
+
+interface TokenTest {
+  rawString: string;
+  token: Token;
+}
+
+const checkToken = ({ rawString, token }: TokenTest): void => {
+  const lexResult = lex(rawString);
+  const paddedLexResult = lex(`  ${rawString}  `);
+
+  expect(lexResult.token).toEqual(token);
+  expect(paddedLexResult.token).toEqual(token);
+};
+
+interface ExpressionTest {
+  expression: string;
+  expectedTokens: Token[];
+}
+
+const checkEntireExpression = ({
+  expression,
+  expectedTokens,
+}: ExpressionTest): void => {
+  let remainingString = expression;
+  let tokens: Token[] = [];
+  while (true) {
+    const result = lex(remainingString);
+    remainingString = result.remainingString;
+    tokens = [...tokens, result.token];
+    if (result.token.name === Tokens.EOF) {
+      break;
+    }
+  }
+
+  expect(tokens).toEqual(expectedTokens);
+};
+
+const isTokenTest = (test: TokenTest | ExpressionTest): test is TokenTest =>
+  Boolean((test as TokenTest).rawString);
+
+const checkComments = (test: TokenTest | ExpressionTest): void => {
+  if (isTokenTest(test)) {
+    checkToken(test);
+  } else {
+    checkEntireExpression(test);
+  }
+};
+
+interface RemainderTest {
+  rawString: string;
+  token: Token;
+  remainingString: string;
+}
+
+const checkRemainder = ({
+  rawString,
+  token,
+  remainingString,
+}: RemainderTest): void => {
+  const lexResult = lex(rawString);
+
+  expect(lexResult.token).toEqual(token);
+  expect(lexResult.remainingString).toEqual(remainingString);
+};
+
+interface ErrorTest {
+  rawString: string;
+  message: string;
+}
+
+const checkError = ({ rawString, message }: ErrorTest): void => {
+  expect(() => {
+    lex(rawString);
+  }).toThrow(message);
+};
 
 describe('lex', () => {
-  test('should parse one token and return remaining string', () => {
-    const result = lex(withAndOperator);
-
-    expect(result).toEqual({
-      token: {
-        name: Tokens.IDENTIFIER,
-        value: 'first',
-      },
-      remainingString: ' AND second',
-    });
-  });
-
-  test('should parse an entire expression', () => {
-    const result = lexEntireExpression(withOrOperator);
-
-    expect(result).toEqual(withOrOperatorAnswer);
-  });
-
-  test('should parse an expression with just one variable', () => {
-    const result = lexEntireExpression(withSingleVariable);
-
-    expect(result).toEqual(withSingleVariableAnswer);
-  });
-
-  test('should lex expressions with any sequence of tokens', () => {
-    const tests = {
-      [withParentheses]: withParenthesesAnswer,
-      [withNestedParentheses]: withNestedParenthesesAnswer,
-      [withNotOperator]: withNotOperatorAnswer,
-      [withMultipleNestedNotOperators]: withMultipleNestedNotOperatorsAnswer,
-      [withXorOperator]: withXorOperatorAnswer,
-    };
-
-    Object.entries(tests).forEach(([expression, response]) => {
-      expect(lexEntireExpression(expression)).toEqual(response);
-    });
-  });
-
-  test('should lex expressions in a range of formats', () => {
-    const tests = {
-      [withSpacedParentheses]: withSpacedParenthesesAnswer,
-      [withLineBreaks]: withLineBreaksAnswer,
-      [withTrailingWhitespace]: withTrailingWhitespaceAnswer,
-    };
-
-    Object.entries(tests).forEach(([expression, response]) => {
-      expect(lexEntireExpression(expression)).toEqual(response);
-    });
-  });
-
-  test('should just return an EOF token when no tokens are found', () => {
-    const tests = [emptyString, whitespace, severalWhitespaces, newLine];
-
-    tests.forEach((expression) => {
-      expect(lexEntireExpression(expression)).toEqual([{ name: Tokens.EOF }]);
-    });
-  });
+  cases('Basic tests', checkToken, basicTests);
+  cases('Identifiers', checkToken, identifierTests);
+  cases('Special characters', checkEntireExpression, specialCharacterTests);
+  cases('Comments', checkComments, commentTests);
+  cases('Remaining string', checkRemainder, remainingStringTests);
+  cases('Complex tests', checkEntireExpression, complexTests);
+  cases('unhappyPath', checkError, unhappyTests);
 });

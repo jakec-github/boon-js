@@ -15,6 +15,7 @@ export enum Tokens {
   OPERATOR = 'OPERATOR',
   SPECIAL_CHARACTER = 'SPECIAL_CHARACTER',
   EOF = 'EOF',
+  COMMENT = 'COMMENT',
 }
 
 export interface Token {
@@ -22,7 +23,8 @@ export interface Token {
     | Tokens.EOF
     | Tokens.IDENTIFIER
     | Tokens.OPERATOR
-    | Tokens.SPECIAL_CHARACTER;
+    | Tokens.SPECIAL_CHARACTER
+    | Tokens.COMMENT;
   value?: string | Operators | SpecialCharacters;
 }
 
