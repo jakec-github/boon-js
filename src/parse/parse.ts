@@ -37,7 +37,7 @@ const parseInternal = (
       : VALID_TOKENS.binaryOperator;
 
     // Retrieves the next Token
-    const nextToken = getNextToken(validTokens, true);
+    const nextToken = getNextToken(validTokens, !nested);
 
     // If the end of file is found here then return what we have
     if (nextToken.name === Tokens.EOF) {
