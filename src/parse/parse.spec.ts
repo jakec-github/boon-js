@@ -165,9 +165,24 @@ describe('parse', () => {
       expression: 'NOT NOT',
       message: 'Invalid token',
     },
-    'throw if parentheses are not balanced': {
-      expression:
-        'NOT ((first OR second) AND NOT third)) XOR (NOT fourth AND fifth)',
+    'throw on lone NOT operator': {
+      expression: 'NOT',
+      message: 'Unexpected end of expression',
+    },
+    'throw on lone nested NOT operator': {
+      expression: '(NOT)',
+      messsage: 'Inavlid token',
+    },
+    'throw if there are too many closing parentheses': {
+      expression: 'NOT ((first OR second) AND NOT third))',
+      message: 'Invalid token',
+    },
+    'throw if there are too many opening parentheses': {
+      expression: 'NOT (((first OR second) AND NOT third)',
+      message: 'Unexpected end of expression',
+    },
+    'throw if an open parenthesis follows an identifier': {
+      expression: 'first (',
       message: 'Invalid token',
     },
     'throw if argument is not a string': {
