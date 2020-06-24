@@ -1,6 +1,12 @@
 import { Token, LexResult, Tokens } from '../types';
 
-import { STRUCTURAL_CHARACTERS, SEPARATORS } from './const';
+import {
+  STRUCTURAL_CHARACTERS,
+  SEPARATORS,
+  QUOTED_IDENTIFIER_DELIMITER,
+  EOL,
+  ESCAPE_CHARACTER,
+} from './const';
 
 export const createResult = (
   name: Token['name'],
@@ -13,10 +19,6 @@ export const createResult = (
   },
   remainingString,
 });
-
-const QUOTATION = '"';
-const ESCAPE = '\\';
-const EOL = String.fromCodePoint(0x000a);
 
 export const getComment = (expression: string): LexResult => {
   let tokenEnd = expression.length;
@@ -46,14 +48,14 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
     const letter = expression[i];
 
     if (tokenEnd === null) {
-      if (letter === QUOTATION) {
+      if (letter === QUOTED_IDENTIFIER_DELIMITER) {
         if (escapeQuotation) {
-          value = value.slice(-1) + QUOTATION;
+          value = value.slice(-1) + QUOTED_IDENTIFIER_DELIMITER;
         } else {
           tokenEnd = i;
         }
       } else {
-        if (letter === ESCAPE) {
+        if (letter === ESCAPE_CHARACTER) {
           escapeQuotation = true;
         } else {
           escapeQuotation = false;
@@ -72,7 +74,7 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
 
   if (tokenEnd === null) {
     throw new Error(
-      `Unexpected end of expression: expected ${QUOTATION} character`,
+      `Unexpected end of expression: expected ${QUOTED_IDENTIFIER_DELIMITER} character`,
     );
   }
 

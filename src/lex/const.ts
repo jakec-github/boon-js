@@ -20,3 +20,8 @@ export const SEPARATORS = new Set(
     0x000d, // Carriage return
   ].map((separator) => String.fromCodePoint(separator)),
 );
+
+export const QUOTED_IDENTIFIER_DELIMITER = String.fromCodePoint(0x0022);
+export const COMMENT_DELIMITER = String.fromCodePoint(0x0023);
+export const EOL = String.fromCodePoint(0x000a);
+export const ESCAPE_CHARACTER = String.fromCodePoint(0x005c);

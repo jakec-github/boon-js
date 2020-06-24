@@ -1,10 +1,13 @@
 import { LexResult, Tokens } from '../types';
 
-import { STRUCTURAL_CHARACTERS, OPERATORS, SEPARATORS } from './const';
+import {
+  STRUCTURAL_CHARACTERS,
+  OPERATORS,
+  SEPARATORS,
+  QUOTED_IDENTIFIER_DELIMITER,
+  COMMENT_DELIMITER,
+} from './const';
 import { createResult, getComment, getQuotedIdentifier } from './utils';
-
-const QUOTATION = '"';
-const COMMENT = '#';
 
 export const lex = (expression: string): LexResult => {
   let tokenStart: number = null;
@@ -25,11 +28,11 @@ export const lex = (expression: string): LexResult => {
           );
         }
         // Once a quoted identifier has been identified it is retrieved in a separate function
-        if (letter === QUOTATION) {
+        if (letter === QUOTED_IDENTIFIER_DELIMITER) {
           return getQuotedIdentifier(expression.slice(i + 1));
         }
         // Once a comment has been identified it is retrieved in a separate function
-        if (letter === COMMENT) {
+        if (letter === COMMENT_DELIMITER) {
           return getComment(expression.slice(i + 1));
         }
         tokenStart = i;
@@ -40,7 +43,10 @@ export const lex = (expression: string): LexResult => {
         tokenEnd = i;
         break;
       } else {
-        if (letter === QUOTATION || letter === COMMENT) {
+        if (
+          letter === QUOTED_IDENTIFIER_DELIMITER ||
+          letter === COMMENT_DELIMITER
+        ) {
           throw new Error(`Unexpected character: ${letter}`);
         }
       }
