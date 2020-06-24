@@ -6,7 +6,7 @@ import { lex } from './lex';
 import {
   basicTests,
   identifierTests,
-  specialCharacterTests,
+  structuralCharacterTests,
   commentTests,
   remainingStringTests,
   complexTests,
@@ -91,7 +91,11 @@ const checkError = ({ rawString, message }: ErrorTest): void => {
 describe('lex', () => {
   cases('Basic tests', checkToken, basicTests);
   cases('Identifiers', checkToken, identifierTests);
-  cases('Special characters', checkEntireExpression, specialCharacterTests);
+  cases(
+    'Structural characters',
+    checkEntireExpression,
+    structuralCharacterTests,
+  );
   cases('Comments', checkComments, commentTests);
   cases('Remaining string', checkRemainder, remainingStringTests);
   cases('Complex tests', checkEntireExpression, complexTests);

@@ -5,7 +5,7 @@ export enum Operators {
   NOT = 'NOT',
 }
 
-export enum SpecialCharacters {
+export enum StructuralCharacters {
   OPEN_PARENTHESIS = '(',
   CLOSE_PARENTHESIS = ')',
 }
@@ -13,7 +13,7 @@ export enum SpecialCharacters {
 export enum Tokens {
   IDENTIFIER = 'IDENTIFIER',
   OPERATOR = 'OPERATOR',
-  SPECIAL_CHARACTER = 'SPECIAL_CHARACTER',
+  STRUCTURAL_CHARACTER = 'STRUCTURAL_CHARACTER',
   EOF = 'EOF',
   COMMENT = 'COMMENT',
 }
@@ -23,9 +23,9 @@ export interface Token {
     | Tokens.EOF
     | Tokens.IDENTIFIER
     | Tokens.OPERATOR
-    | Tokens.SPECIAL_CHARACTER
+    | Tokens.STRUCTURAL_CHARACTER
     | Tokens.COMMENT;
-  value?: string | Operators | SpecialCharacters;
+  value?: string | Operators | StructuralCharacters;
 }
 
 export interface LexResult {

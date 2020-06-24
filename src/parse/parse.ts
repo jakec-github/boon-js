@@ -46,7 +46,7 @@ const parseInternal = (
 
     // This indicates a close parenthesis has been found
     // The expression will be returned and incorporated into the final expression
-    if (nextToken.name === Tokens.SPECIAL_CHARACTER) {
+    if (nextToken.name === Tokens.STRUCTURAL_CHARACTER) {
       return addOperatorsToOutput(output, operators);
     }
 

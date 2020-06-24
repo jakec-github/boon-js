@@ -1,4 +1,4 @@
-import { Token, Operators, Tokens, SpecialCharacters } from '../types';
+import { Token, Operators, Tokens, StructuralCharacters } from '../types';
 
 export const OPERATOR_PRECEDENCE = {
   NOT: 0,
@@ -11,15 +11,15 @@ export const VALID_TOKENS: Record<string, Token[]> = {
   identifierOnly: [
     { name: Tokens.IDENTIFIER },
     {
-      name: Tokens.SPECIAL_CHARACTER,
-      value: SpecialCharacters.OPEN_PARENTHESIS,
+      name: Tokens.STRUCTURAL_CHARACTER,
+      value: StructuralCharacters.OPEN_PARENTHESIS,
     },
   ],
   identifierOrNot: [
     { name: Tokens.IDENTIFIER },
     {
-      name: Tokens.SPECIAL_CHARACTER,
-      value: SpecialCharacters.OPEN_PARENTHESIS,
+      name: Tokens.STRUCTURAL_CHARACTER,
+      value: StructuralCharacters.OPEN_PARENTHESIS,
     },
     { name: Tokens.OPERATOR, value: Operators.NOT },
   ],
@@ -33,8 +33,8 @@ export const VALID_TOKENS: Record<string, Token[]> = {
     { name: Tokens.OPERATOR, value: Operators.OR },
     { name: Tokens.OPERATOR, value: Operators.XOR },
     {
-      name: Tokens.SPECIAL_CHARACTER,
-      value: SpecialCharacters.CLOSE_PARENTHESIS,
+      name: Tokens.STRUCTURAL_CHARACTER,
+      value: StructuralCharacters.CLOSE_PARENTHESIS,
     },
   ],
 };

@@ -22,7 +22,7 @@ import { Tokens } from '../types';
 export const basicTests = {
   'lex NOT operator': {
     rawString: 'NOT',
-    token: FIRST,
+    token: NOT,
   },
   'lex XOR operator': {
     rawString: 'XOR',
@@ -67,13 +67,25 @@ export const identifierTests = {
     rawString: 'and',
     token: { name: Tokens.IDENTIFIER, value: 'and' },
   },
-  'lex an unquoted identifier containing a # character': {
-    rawString: 'and#2',
-    token: { name: Tokens.IDENTIFIER, value: 'and#2' },
-  },
   'handle structural character in quoted identifier': {
     rawString: '"("',
     token: { name: Tokens.IDENTIFIER, value: '(' },
+  },
+  'handle NOT operator in quoted identifier': {
+    rawString: '"NOT"',
+    token: { name: Tokens.IDENTIFIER, value: 'NOT' },
+  },
+  'handle XOR operator in quoted identifier': {
+    rawString: '"XOR"',
+    token: { name: Tokens.IDENTIFIER, value: 'XOR' },
+  },
+  'handle AND operator in quoted identifier': {
+    rawString: '"AND"',
+    token: { name: Tokens.IDENTIFIER, value: 'AND' },
+  },
+  'handle OR operator in quoted identifier': {
+    rawString: '"OR"',
+    token: { name: Tokens.IDENTIFIER, value: 'OR' },
   },
   'handle space character in quoted identifier': {
     rawString: `"${SPACE}"`,
@@ -95,9 +107,13 @@ export const identifierTests = {
     rawString: `"${SPACE}#"`,
     token: { name: Tokens.IDENTIFIER, value: `${SPACE}#` },
   },
+  'handle empty quoted identifier': {
+    rawString: '""',
+    token: { name: Tokens.IDENTIFIER, value: '' },
+  },
 };
 
-export const specialCharacterTests = {
+export const structuralCharacterTests = {
   'handle structural characters that are not separated using whitespace': {
     expression: 'NOT(first)',
     expectedTokens: [NOT, OPEN, FIRST, CLOSE, EOF],
@@ -116,6 +132,7 @@ export const specialCharacterTests = {
       THIRD,
       CLOSE,
       CLOSE,
+      EOF,
     ],
   },
   'handle space as separator': {
@@ -165,6 +182,7 @@ export const commentTests = {
         name: Tokens.COMMENT,
         value: ' Comment line 3',
       },
+      EOF,
     ],
   },
 };
@@ -245,6 +263,7 @@ export const complexTests = {
         name: Tokens.COMMENT,
         value: ' Comment 4',
       },
+      EOF,
     ],
   },
   'lex a grammatically invalid sequence of tokens without error': {
@@ -270,6 +289,14 @@ export const unhappyTests = {
   },
   'throw if quoted identifier is not followed by separator or structural character': {
     rawString: '"first"#',
-    message: 'Unexpected character: expected ( character or separator',
+    message: 'Unexpected character: # Expected ( character or separator',
+  },
+  'throw if " character is found in an unquoted identifier': {
+    rawString: 'abc"de',
+    message: 'Unexpected character: "',
+  },
+  'throw if # character is found in an unquoted identifier': {
+    rawString: 'abc#de',
+    message: 'Unexpected character: #',
   },
 };

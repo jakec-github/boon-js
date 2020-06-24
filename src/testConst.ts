@@ -1,4 +1,4 @@
-import { Operators, SpecialCharacters, Tokens } from './types';
+import { Operators, StructuralCharacters, Tokens } from './types';
 
 export const TRUE = { name: Tokens.IDENTIFIER, value: 'true' };
 export const FALSE = { name: Tokens.IDENTIFIER, value: 'false' };
@@ -15,12 +15,12 @@ export const AND = { name: Tokens.OPERATOR, value: Operators.AND };
 export const OR = { name: Tokens.OPERATOR, value: Operators.OR };
 
 export const OPEN = {
-  name: Tokens.SPECIAL_CHARACTER,
-  value: SpecialCharacters.OPEN_PARENTHESIS,
+  name: Tokens.STRUCTURAL_CHARACTER,
+  value: StructuralCharacters.OPEN_PARENTHESIS,
 };
 export const CLOSE = {
-  name: Tokens.SPECIAL_CHARACTER,
-  value: SpecialCharacters.CLOSE_PARENTHESIS,
+  name: Tokens.STRUCTURAL_CHARACTER,
+  value: StructuralCharacters.CLOSE_PARENTHESIS,
 };
 
 export const EOF = { name: Tokens.EOF };

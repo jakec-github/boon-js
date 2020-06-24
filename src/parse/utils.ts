@@ -43,7 +43,7 @@ export const getValue = (
   }
 
   const value: PostfixExpression =
-    nextToken.name === Tokens.SPECIAL_CHARACTER
+    nextToken.name === Tokens.STRUCTURAL_CHARACTER
       ? parser(getNextToken, true)
       : [nextToken];
 
