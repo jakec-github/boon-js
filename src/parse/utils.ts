@@ -23,12 +23,16 @@ export const newTokenGenerator = (expression: string): GetNextToken => {
   let remainingExpression = expression;
 
   return (validTokens, endIsValid = false) => {
-    const { token, remainingString } = lex(remainingExpression);
-    remainingExpression = remainingString;
+    while (true) {
+      const { token, remainingString } = lex(remainingExpression);
+      remainingExpression = remainingString;
 
-    validateToken(token, validTokens, endIsValid);
+      if (token.name !== Tokens.COMMENT) {
+        validateToken(token, validTokens, endIsValid);
 
-    return token;
+        return token;
+      }
+    }
   };
 };
 

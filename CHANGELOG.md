@@ -3,7 +3,7 @@
 - Supported quoted identifiers
 - Supported comments
 - Replaced use of "operand" with the more accurate "identifier"
-- Updates seprating characters to match boon spec
+- Updates separating characters to match boon spec
 - Greatly improved testing on parser and lexer
 
 ## 1.0.2

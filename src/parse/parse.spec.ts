@@ -14,6 +14,7 @@ import {
 import { PostfixExpression } from '../types';
 
 import { parse } from './parse';
+import { commentTests } from '../lex/testData';
 
 interface EqualityTest {
   expression: string;
@@ -117,6 +118,38 @@ describe('parse', () => {
 
   cases('parentheses', checkEquality, parentheses);
 
+  const comments = {
+    'Removes trailing comment': {
+      expression: 'NOT first # Comment',
+      postfix: [FIRST, NOT],
+    },
+    'Removes leading comment': {
+      expression: `# Comment
+      NOT first`,
+      postfix: [FIRST, NOT],
+    },
+    'Removes subsequent comments': {
+      expression: `# Comment 1
+      # Comment 2
+      NOT first
+      # Comment 3
+      # Comment 4`,
+      postfix: [FIRST, NOT],
+    },
+    'Removes comments whereever they appear in the expression': {
+      expression: `# Comment
+      NOT # Comment
+      ( # Comment
+        first # Comment
+        AND # Comment
+        second # Comment
+      ) # Comment`,
+      postfix: [FIRST, SECOND, AND, NOT],
+    },
+  };
+
+  cases('comments', checkEquality, comments);
+
   const complexTests = {
     'handle a complicated expression with multiple NOT operators': {
       expression: 'NOT first AND second AND NOT third XOR NOT fourth',
@@ -184,6 +217,14 @@ describe('parse', () => {
     'throw if an open parenthesis follows an identifier': {
       expression: 'first (',
       message: 'Invalid token',
+    },
+    'throw on empty expression': {
+      expression: '',
+      message: 'Unexpected end of expression',
+    },
+    'throw on expression with only a comment': {
+      expression: '# Comment',
+      message: 'Unexpected end of expression',
     },
     'throw if argument is not a string': {
       expression: null as string,
