@@ -185,6 +185,27 @@ export const commentTests = {
       EOF,
     ],
   },
+  'return lone # as empty comment': {
+    expression: '#',
+    expectedTokens: [
+      {
+        name: Tokens.COMMENT,
+        value: '',
+      },
+      EOF,
+    ],
+  },
+  'return # and EOL as empty comment': {
+    expression: `#
+    `,
+    expectedTokens: [
+      {
+        name: Tokens.COMMENT,
+        value: '',
+      },
+      EOF,
+    ],
+  },
 };
 
 export const remainingStringTests = {
