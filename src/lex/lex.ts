@@ -16,12 +16,12 @@ export const lex = (expression: string): LexResult => {
 
   // Loops through characters in the expression until the next token is found
   for (let i = 0; i < expression.length; i += 1) {
-    const letter = expression[i];
+    const char = expression[i];
 
     // Finds tokem start and returns immediately returns any identifiable tokens
     if (tokenStart === null) {
-      if (!SEPARATORS.has(letter)) {
-        const structuralChar = STRUCTURAL_CHARACTERS[letter];
+      if (!SEPARATORS.has(char)) {
+        const structuralChar = STRUCTURAL_CHARACTERS[char];
 
         if (structuralChar) {
           const nextChar = expression[i + 1];
@@ -38,32 +38,32 @@ export const lex = (expression: string): LexResult => {
 
           return createResult(
             Tokens.STRUCTURAL_CHARACTER,
-            STRUCTURAL_CHARACTERS[letter],
+            STRUCTURAL_CHARACTERS[char],
             expression.slice(i + 1),
           );
         }
         // Once a quoted identifier has been identified it is retrieved in a separate function
-        if (letter === QUOTED_IDENTIFIER_DELIMITER) {
+        if (char === QUOTED_IDENTIFIER_DELIMITER) {
           return getQuotedIdentifier(expression.slice(i + 1));
         }
         // Once a comment has been identified it is retrieved in a separate function
-        if (letter === COMMENT_DELIMITER) {
+        if (char === COMMENT_DELIMITER) {
           return getComment(expression.slice(i + 1));
         }
         tokenStart = i;
       }
     } else {
       // Breaks on the end of the token and throws on invalid characters
-      if (SEPARATORS.has(letter) || STRUCTURAL_CHARACTERS[letter]) {
+      if (SEPARATORS.has(char) || STRUCTURAL_CHARACTERS[char]) {
         tokenEnd = i;
-        delimitingCharacter = letter;
+        delimitingCharacter = char;
         break;
       } else {
         if (
-          letter === QUOTED_IDENTIFIER_DELIMITER ||
-          letter === COMMENT_DELIMITER
+          char === QUOTED_IDENTIFIER_DELIMITER ||
+          char === COMMENT_DELIMITER
         ) {
-          throw new Error(`Unexpected character: ${letter}`);
+          throw new Error(`Unexpected character: ${char}`);
         }
       }
     }

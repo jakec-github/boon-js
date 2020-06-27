@@ -45,27 +45,27 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
   let tokenEnd = null;
 
   for (let i = 0; i < expression.length; i += 1) {
-    const letter = expression[i];
+    const char = expression[i];
 
     if (tokenEnd === null) {
-      if (letter === QUOTED_IDENTIFIER_DELIMITER) {
+      if (char === QUOTED_IDENTIFIER_DELIMITER) {
         if (escapeQuotation) {
           value = value.slice(-1) + QUOTED_IDENTIFIER_DELIMITER;
         } else {
           tokenEnd = i;
         }
       } else {
-        if (letter === ESCAPE_CHARACTER) {
+        if (char === ESCAPE_CHARACTER) {
           escapeQuotation = true;
         } else {
           escapeQuotation = false;
         }
-        value = value += letter;
+        value = value += char;
       }
     } else {
-      if (!SEPARATORS.has(letter) && !STRUCTURAL_CHARACTERS[letter]) {
+      if (!SEPARATORS.has(char) && !STRUCTURAL_CHARACTERS[char]) {
         throw new Error(
-          `Unexpected character: ${letter} Expected ( character or separator`,
+          `Unexpected character: ${char} Expected ( character or separator`,
         );
       }
       break;
