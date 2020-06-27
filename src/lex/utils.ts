@@ -65,7 +65,7 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
     } else {
       if (!SEPARATORS.has(char) && !STRUCTURAL_CHARACTERS[char]) {
         throw new Error(
-          `Unexpected character: ${char} Expected ( character or separator`,
+          `Unexpected character: ${char} Expected ) character or separator`,
         );
       }
       break;

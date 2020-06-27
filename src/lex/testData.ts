@@ -310,7 +310,7 @@ export const unhappyTests = {
   },
   'throw if quoted identifier is not followed by separator or structural character': {
     rawString: '"first"#',
-    message: 'Unexpected character: # Expected ( character or separator',
+    message: 'Unexpected character: # Expected ) character or separator',
   },
   'throw if " character is found in an unquoted identifier': {
     rawString: 'abc"de',
