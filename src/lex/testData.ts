@@ -115,7 +115,7 @@ export const identifierTests = {
 
 export const structuralCharacterTests = {
   'handle structural characters that are not separated using whitespace': {
-    expression: 'NOT(first)',
+    expression: 'NOT (first)',
     expectedTokens: [NOT, OPEN, FIRST, CLOSE, EOF],
   },
   'handle nested structrual characters': {
@@ -319,5 +319,15 @@ export const unhappyTests = {
   'throw if # character is found in an unquoted identifier': {
     rawString: 'abc#de',
     message: 'Unexpected character: #',
+  },
+  'throw if operator is not followed by a separator': {
+    rawString: 'AND(',
+    message:
+      'Unexpected character: (. Operators should be separated using whitespace',
+  },
+  'throw if closing parenthesis is followed directly by an operator': {
+    rawString: ')OR',
+    message:
+      'Unexpected character: O. A closing parenthesis should be followed by another closing parenthesis or whitespace',
   },
 };

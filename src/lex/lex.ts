@@ -1,4 +1,4 @@
-import { LexResult, Tokens } from '../types';
+import { LexResult, StructuralCharacters, Tokens } from '../types';
 
 import {
   STRUCTURAL_CHARACTERS,
@@ -12,6 +12,7 @@ import { createResult, getComment, getQuotedIdentifier } from './utils';
 export const lex = (expression: string): LexResult => {
   let tokenStart: number = null;
   let tokenEnd: number = null;
+  let delimitingCharacter = null;
 
   // Loops through characters in the expression until the next token is found
   for (let i = 0; i < expression.length; i += 1) {
@@ -20,7 +21,21 @@ export const lex = (expression: string): LexResult => {
     // Finds tokem start and returns immediately returns any identifiable tokens
     if (tokenStart === null) {
       if (!SEPARATORS.has(letter)) {
-        if (STRUCTURAL_CHARACTERS[letter]) {
+        const structuralChar = STRUCTURAL_CHARACTERS[letter];
+
+        if (structuralChar) {
+          const nextChar = expression[i + 1];
+          if (
+            structuralChar === StructuralCharacters.CLOSE_PARENTHESIS &&
+            nextChar &&
+            !SEPARATORS.has(nextChar) &&
+            nextChar !== StructuralCharacters.CLOSE_PARENTHESIS
+          ) {
+            throw new Error(
+              `Unexpected character: ${nextChar}. A closing parenthesis should be followed by another closing parenthesis or whitespace`,
+            );
+          }
+
           return createResult(
             Tokens.STRUCTURAL_CHARACTER,
             STRUCTURAL_CHARACTERS[letter],
@@ -41,6 +56,7 @@ export const lex = (expression: string): LexResult => {
       // Breaks on the end of the token and throws on invalid characters
       if (SEPARATORS.has(letter) || STRUCTURAL_CHARACTERS[letter]) {
         tokenEnd = i;
+        delimitingCharacter = letter;
         break;
       } else {
         if (
@@ -60,6 +76,11 @@ export const lex = (expression: string): LexResult => {
     const remainingString = expression.slice(tokenEnd);
 
     if (OPERATORS[value]) {
+      if (delimitingCharacter && !SEPARATORS.has(delimitingCharacter)) {
+        throw new Error(
+          `Unexpected character: ${delimitingCharacter}. Operators should be separated using whitespace`,
+        );
+      }
       return createResult(Tokens.OPERATOR, OPERATORS[value], remainingString);
     } else {
       return createResult(Tokens.IDENTIFIER, value, remainingString);
