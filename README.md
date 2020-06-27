@@ -5,7 +5,8 @@ boon-js is a parser and evaluator for boon, The **bo**olean expressi**on** langu
 Boon is a format for defining boolean expressions as strings. It looks like this:
 
 ```boon
-(isHungry OR isThirsty) AND NOT isFridgeFull
+# Is it a good film?
+isJurassicPark AND is NOT (film_2 OR film_3)
 ```
 
 These expressions can be:
@@ -44,54 +45,82 @@ getEvaluator('unlocked AND open')({ unlocked: true }); // returns false
 
 ## API reference
 
-### getEvaluator()
+### `getEvaluator()`
 
 Returns a function that evaluates the expression for any given input. The returned function takes a map of strings to any type. The type is coerced into a boolean to get the value of the string.
 
-Arguments
+#### Arguments
 
 - expression: string
 
-Returns
+#### Returns
 
-- function
+- customEvaluateFunction
 
-  Arguments
+#### Throws
 
-  - booleanMap: Record<string, any>
+- Invalid token
+- Unexpected end of expression
+- Expected string but received [received]
 
-  Returns
+### `customEvaluateFunction()`
 
-  - expressionResult: boolean
+Not exported directly. Returned from `getEvaluator`
 
-### parse()
+#### Arguments
+
+- booleanMap: Record<string, any>
+
+#### Returns
+
+- expressionResult: boolean
+
+#### Throws
+
+- [received] should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator
+- Invalid token: [token]. Found in parsed expression at index 0
+- Invalid postfix expression: too many identifiers after evaluation
+
+### `parse()`
 
 Parses an expression into a series of tokens in [postfix notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation)
 
-Arguments
+#### Arguments
 
 - expression: string
 
-Returns
+#### Returns
 
 - parsedExpression: PostfixExpression
 
-### evaluate()
+#### Throws
+
+- Invalid token
+- Unexpected end of expression
+- Expected string but received [recieved]
+
+### `evaluate()`
 
 Evaluates a PostfixExpression output from `parse()`
 
-Arguments
+#### Arguments
 
 - expression: PostfixExpression
 - booleanMap: Record<string, any>
 
-Returns
+#### Returns
 
 - result: boolean
 
+#### Throws
+
+- [received] should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator
+- Invalid token: [token]. Found in parsed expression at index 0
+- Invalid postfix expression: too many identifiers after evaluation
+
 ## About boon
 
-Boon is a standard format for human-readable boolean expressions. Typically, boolean expressions are defined within the code that evaluates them. Boon allows engineers to pull in a boolean expression defined elsewhere. This may be another process or a user interface
+Boon is a standard format for human-readable boolean expressions. Typically, boolean expressions are defined within the code that evaluates them. Boon allows engineers to pull in a boolean expression defined elsewhere. This may be in another process or from a user interface
 
 Boon supports the following operators:
 
@@ -102,21 +131,31 @@ Boon supports the following operators:
 
 Operators are evaluated in that order and must be uppercase. Boon also supports the use of parentheses to override operator precedence
 
-Full boon specification will be linked here
+The full boon specification is availble to view [here](hhttps://docs.google.com/document/d/1UzsnnKjjW7T_u-OPb5dcPmc9My4YS_jHoyButolNVa4/edit?usp=sharing)
 
 ### Examples
 
 ```boon
-tyrannosaurus-rex
+velociprator
+```
 
-NOT tyrannosaurus-rex
+```boon
+# Use quotation marks where necessary
+NOT "Tyrannosaurus Rex"
+```
 
-tyrannosaurus-rex AND NOT (Brachiosaurus OR gallimimus)
+```boon
+"Tyrannosaurus Rex" AND NOT (Brachiosaurus OR gallimimus)
+```
 
-tyrannosaurus-rex AND (Brachiosaurus XOR (gallimimus OR T_PRORSUS))
+```boon
+"Tyrannosaurus Rex" AND (Brachiosaurus XOR (gallimimus OR T_PRORSUS))
+```
 
+```boon
+# Boon supports annotations
 tyrannosaurus-rex XOR (
-  Brachiosaurus AND (
+  Brachiosaurus AND ( # Add them to the end of any line
     gallimimus AND T_PRORSUS
   )
 )
