@@ -1,9 +1,9 @@
-## Unreleased
+## 2.0.0
 
-- Supported quoted identifiers
-- Supported comments
+- Added support for quoted identifiers
+- Added support for comments
 - Replaced use of "operand" with the more accurate "identifier"
-- Updates separating characters to match boon spec
+- Updated separating characters to match boon spec
 - Greatly improved testing on parser and lexer
 
 ## 1.0.2
