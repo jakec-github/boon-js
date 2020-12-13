@@ -5,8 +5,8 @@ boon-js is a parser and evaluator for boon, The **bo**olean expressi**on** langu
 Boon is a format for defining boolean expressions as strings. It looks like this:
 
 ```boon
-# Is it a good film?
-isJurassicPark AND is NOT (film_2 OR film_3)
+# Checks if a film is one of the greatest blockbusters of all time!
+isJurassicPark AND NOT (film_2 OR film_3)
 ```
 
 These expressions can be:
@@ -131,7 +131,7 @@ Boon supports the following operators:
 
 Operators are evaluated in that order and must be uppercase. Boon also supports the use of parentheses to override operator precedence
 
-The full boon specification is availble to view [here](hhttps://docs.google.com/document/d/1UzsnnKjjW7T_u-OPb5dcPmc9My4YS_jHoyButolNVa4/edit?usp=sharing)
+The full boon specification is availble to view [here](https://docs.google.com/document/d/1UzsnnKjjW7T_u-OPb5dcPmc9My4YS_jHoyButolNVa4/edit?usp=sharing)
 
 ### Examples
 
