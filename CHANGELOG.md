@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Fixed README typos
+
 ## 2.0.0
 
 - Added support for quoted identifiers
@@ -8,7 +12,7 @@
 
 ## 1.0.2
 
-- Fixes bug with handling of unterminated nested expressions
+- Fixed bug with handling of unterminated nested expressions
 
 ## 1.0.1
 
