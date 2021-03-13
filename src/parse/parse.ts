@@ -2,7 +2,6 @@ import { PostfixExpression, Tokens, Operators } from '../types';
 
 import { VALID_TOKENS } from './const';
 import {
-  addOperatorsToOutput,
   previousOperatorTakesPrecedent,
   newTokenGenerator,
   GetNextToken,
@@ -39,28 +38,28 @@ const parseInternal = (
     // Retrieves the next Token
     const nextToken = getNextToken(validTokens, !nested);
 
-    // If the end of file is found here then return what we have
-    if (nextToken.name === Tokens.EOF) {
-      return addOperatorsToOutput(output, operators);
-    }
-
-    // This indicates a close parenthesis has been found
-    // The expression will be returned and incorporated into the final expression
-    if (nextToken.name === Tokens.STRUCTURAL_CHARACTER) {
-      return addOperatorsToOutput(output, operators);
+    if (
+      nextToken.name === Tokens.EOF || // If the end of file is found here then return what we have
+      nextToken.name === Tokens.STRUCTURAL_CHARACTER // The expression will be returned and incorporated into the final expression
+    ) {
+      return [...output, ...[...operators].reverse()];
     }
 
     // In postfix notation operator order is determined by precedence
-    const previousOperator = operators[operators.length - 1] || null;
-    if (
-      previousOperator &&
-      previousOperatorTakesPrecedent(
-        previousOperator.value as Operators,
-        nextToken.value as Operators,
-      )
-    ) {
-      output = addOperatorsToOutput(output, operators);
-      operators = [];
+    while (operators.length) {
+      const previousOperator = operators[operators.length - 1] || null;
+      if (
+        previousOperator &&
+        previousOperatorTakesPrecedent(
+          previousOperator.value as Operators,
+          nextToken.value as Operators,
+        )
+      ) {
+        output = [...output, previousOperator];
+        operators = operators.slice(0, -1);
+      } else {
+        break;
+      }
     }
 
     // The new operator is now added to the stack

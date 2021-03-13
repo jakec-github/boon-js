@@ -14,7 +14,6 @@ import {
 import { PostfixExpression } from '../types';
 
 import { parse } from './parse';
-import { commentTests } from '../lex/testData';
 
 interface EqualityTest {
   expression: string;
@@ -78,6 +77,14 @@ describe('parse', () => {
     'parse an expression with an OR then an AND then an XOR operator': {
       expression: 'first OR second AND third XOR fourth',
       postfix: [FIRST, SECOND, THIRD, FOURTH, XOR, AND, OR],
+    },
+    'parse an expression with an OR then an XOR then an AND': {
+      expression: 'first OR second XOR third AND fourth',
+      postfix: [FIRST, SECOND, THIRD, XOR, FOURTH, AND, OR],
+    },
+    'parse an expression with an OR then an XOR then an AND with some NOTs': {
+      expression: 'first OR NOT second XOR third AND NOT fourth',
+      postfix: [FIRST, SECOND, NOT, THIRD, XOR, FOURTH, NOT, AND, OR],
     },
   };
 
