@@ -24,6 +24,14 @@ describe('getEvaluator', () => {
     expect(result1).toEqual(false);
     expect(result2).toEqual(true);
   });
+
+  test('should handle OR, XOR, AND', () => {
+    const result = getEvaluator('true OR true XOR false AND false')(
+      BOOLEAN_MAP,
+    );
+
+    expect(result).toEqual(true);
+  });
 });
 
 describe('evaluate', () => {
