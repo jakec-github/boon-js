@@ -1,3 +1,7 @@
+## 2.0.2
+
+- Fixed operator precedence in the case of OR, XOR, AND
+
 ## 2.0.1
 
 - Fixed README typos

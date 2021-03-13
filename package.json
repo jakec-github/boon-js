@@ -1,6 +1,6 @@
 {
   "name": "boon-js",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A parser and evaluator for boolean expression written using the boon format",
   "main": "lib/index.js",
   "scripts": {
