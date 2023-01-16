@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Adds new end 2 end tests
+- Upgrades all dev dependencies
 
 ## 2.0.3
 
