@@ -15,6 +15,8 @@ These expressions can be:
 - shared between processes
 - written and read by non-technical team members or clients
 
+Let me know how you are using boon-js by opening an issue on the github page. Happy to better support popular use cases.
+
 ## Installation
 
 Add this package from npm using `npm install boon-js` or `yarn add boon-js`
@@ -40,7 +42,10 @@ const mysteryAnimal = {
 velociraptorTest(mysteryAnimal); // Returns true
 
 // or invoke it immediately
-getEvaluator('unlocked AND open')({ unlocked: true }); // returns false
+const expression = 'unlocked AND open';
+const door = { unlocked: true }; // `open` will default to false
+
+getEvaluator(expression)(door); // returns false
 ```
 
 ## API reference
@@ -155,7 +160,7 @@ NOT "Tyrannosaurus Rex"
 ```boon
 # Boon supports annotations
 tyrannosaurus-rex XOR (
-  Brachiosaurus AND ( # Add them to the end of any line
+  Brachiosaurus AND ( # Add comments to the end of any line
     gallimimus AND T_PRORSUS
   )
 )
