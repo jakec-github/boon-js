@@ -1,4 +1,4 @@
-## Unreleased
+## 2.0.4
 
 - Adds new end 2 end tests
 - Upgrades all dev dependencies
