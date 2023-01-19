@@ -89,7 +89,14 @@ const checkError = ({ rawString, message }: ErrorTest): void => {
 };
 
 describe('lex', () => {
-  cases('Basic tests', checkToken, basicTests);
+  test.each(basicTests)('%s', (_, rawString, token) => {
+    const lexResult = lex(rawString);
+    const paddedLexResult = lex(`  ${rawString}  `);
+
+    expect(lexResult.token).toEqual(token);
+    expect(paddedLexResult.token).toEqual(token);
+  });
+
   cases('Identifiers', checkToken, identifierTests);
   cases(
     'Structural characters',

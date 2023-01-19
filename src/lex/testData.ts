@@ -17,50 +17,24 @@ import {
   LINE_FEED,
   CARRIAGE_RETURN,
 } from '../testConst';
-import { Tokens } from '../types';
+import { Token, Tokens } from '../types';
 
-export const basicTests = {
-  'lex NOT operator': {
-    rawString: 'NOT',
-    token: NOT,
-  },
-  'lex XOR operator': {
-    rawString: 'XOR',
-    token: XOR,
-  },
-  'lex AND operator': {
-    rawString: 'AND',
-    token: AND,
-  },
-  'lex OR operator': {
-    rawString: 'OR',
-    token: OR,
-  },
-  'lex an unquoted identifier': {
-    rawString: 'true',
-    token: TRUE,
-  },
-  'lex a quoted identifier': {
-    rawString: '"false"',
-    token: FALSE,
-  },
-  'lex an open parenthesis': {
-    rawString: '(',
-    token: OPEN,
-  },
-  'lex a close parenthesis': {
-    rawString: ')',
-    token: CLOSE,
-  },
-  'lex a comment': {
-    rawString: `# comment${LINE_FEED}`,
-    token: { name: Tokens.COMMENT, value: ' comment' },
-  },
-  'return an EOF token when no token is found': {
-    rawString: '',
-    token: EOF,
-  },
-};
+export const basicTests: [string, string, Token][] = [
+  ['lex NOT operator', 'NOT', NOT],
+  ['lex XOR operator', 'XOR', XOR],
+  ['lex AND operator', 'AND', AND],
+  ['lex OR operator', 'OR', OR],
+  ['lex an unquoted identifier', 'true', TRUE],
+  ['lex a quoted identifier', '"false"', FALSE],
+  ['lex an open parenthesis', '(', OPEN],
+  ['lex a close parenthesis', ')', CLOSE],
+  [
+    'lex a comment',
+    `# comment${LINE_FEED}`,
+    { name: Tokens.COMMENT, value: ' comment' },
+  ],
+  ['return an EOF token when no token is found', '', EOF],
+];
 
 export const identifierTests = {
   'return identifier token for lowercase operator': {
@@ -308,10 +282,11 @@ export const unhappyTests = {
     rawString: '"first AND second',
     message: 'Unexpected end of expression: expected " character',
   },
-  'throw if quoted identifier is not followed by separator or structural character': {
-    rawString: '"first"#',
-    message: 'Unexpected character: # Expected ) character or separator',
-  },
+  'throw if quoted identifier is not followed by separator or structural character':
+    {
+      rawString: '"first"#',
+      message: 'Unexpected character: # Expected ) character or separator',
+    },
   'throw if " character is found in an unquoted identifier': {
     rawString: 'abc"de',
     message: 'Unexpected character: "',
