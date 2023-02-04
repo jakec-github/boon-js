@@ -19,6 +19,9 @@ import {
 } from '../testConst';
 import { Token, Tokens } from '../types';
 
+const id = (value: string): Token => ({ name: Tokens.IDENTIFIER, value });
+const comment = (value: string): Token => ({ name: Tokens.COMMENT, value });
+
 export const basicTests: [string, string, Token][] = [
   ['lex NOT operator', 'NOT', NOT],
   ['lex XOR operator', 'XOR', XOR],
@@ -36,65 +39,55 @@ export const basicTests: [string, string, Token][] = [
   ['return an EOF token when no token is found', '', EOF],
 ];
 
-export const identifierTests = {
-  'return identifier token for lowercase operator': {
-    rawString: 'and',
-    token: { name: Tokens.IDENTIFIER, value: 'and' },
-  },
-  'handle structural character in quoted identifier': {
-    rawString: '"("',
-    token: { name: Tokens.IDENTIFIER, value: '(' },
-  },
-  'handle NOT operator in quoted identifier': {
-    rawString: '"NOT"',
-    token: { name: Tokens.IDENTIFIER, value: 'NOT' },
-  },
-  'handle XOR operator in quoted identifier': {
-    rawString: '"XOR"',
-    token: { name: Tokens.IDENTIFIER, value: 'XOR' },
-  },
-  'handle AND operator in quoted identifier': {
-    rawString: '"AND"',
-    token: { name: Tokens.IDENTIFIER, value: 'AND' },
-  },
-  'handle OR operator in quoted identifier': {
-    rawString: '"OR"',
-    token: { name: Tokens.IDENTIFIER, value: 'OR' },
-  },
-  'handle space character in quoted identifier': {
-    rawString: `"${SPACE}"`,
-    token: { name: Tokens.IDENTIFIER, value: SPACE },
-  },
-  'handle tab character in quoted identifier': {
-    rawString: `"${TAB}"`,
-    token: { name: Tokens.IDENTIFIER, value: TAB },
-  },
-  'handle line feed character in quoted identifier': {
-    rawString: `"${LINE_FEED}"`,
-    token: { name: Tokens.IDENTIFIER, value: LINE_FEED },
-  },
-  'handle carriage return character in quoted identifier': {
-    rawString: `"${CARRIAGE_RETURN}"`,
-    token: { name: Tokens.IDENTIFIER, value: CARRIAGE_RETURN },
-  },
-  'handle space then # character in quoted identifier': {
-    rawString: `"${SPACE}#"`,
-    token: { name: Tokens.IDENTIFIER, value: `${SPACE}#` },
-  },
-  'handle empty quoted identifier': {
-    rawString: '""',
-    token: { name: Tokens.IDENTIFIER, value: '' },
-  },
-};
+// Rewrite the indentifier tests in the forma of the basc tests
+export const identifierTests: [string, string, Token][] = [
+  ['return identifier token for lowercase operator', 'and', id('and')],
+  ['handle structural character in quoted identifier', '"("', id('(')],
+  ['handle NOT operator in quoted identifier', '"NOT"', id('NOT')],
+  ['handle XOR operator in quoted identifier', '"XOR"', id('XOR')],
+  ['handle AND operator in quoted identifier', '"AND"', id('AND')],
+  ['handle OR operator in quoted identifier', '"OR"', id('OR')],
+  ['handle space character in quoted identifier', `"${SPACE}"`, id(SPACE)],
+  ['handle tab character in quoted identifier', `"${TAB}"`, id(TAB)],
+  [
+    'handle line feed character in quoted identifier',
+    `"${LINE_FEED}"`,
+    id(LINE_FEED),
+  ],
+  [
+    'handle carriage return character in quoted identifier',
+    `"${CARRIAGE_RETURN}"`,
+    id(CARRIAGE_RETURN),
+  ],
+  [
+    'handle multiple structural characters in quoted identifier',
+    '"(())"',
+    id('(())'),
+  ],
+  ['handle multiple operators in quoted identifier', '"ANDOR"', id('ANDOR')],
+  [
+    'handle multiple operators and structural characters in quoted identifier',
+    '"AND(OR)"',
+    id('AND(OR)'),
+  ],
+  [
+    'handle space then # character in quoted identifier',
+    `"${SPACE}#"`,
+    id(`${SPACE}#`),
+  ],
+  ['handle empty quoted identifier', '""', id('')],
+];
 
-export const structuralCharacterTests = {
-  'handle structural characters that are not separated using whitespace': {
-    expression: 'NOT (first)',
-    expectedTokens: [NOT, OPEN, FIRST, CLOSE, EOF],
-  },
-  'handle nested structrual characters': {
-    expression: '((first AND second) XOR (third))',
-    expectedTokens: [
+export const structuralCharacterTests: [string, string, Token[]][] = [
+  [
+    'handle structural characters that are not separated using whitespace',
+    'NOT (first)',
+    [NOT, OPEN, FIRST, CLOSE, EOF],
+  ],
+  [
+    'handle nested structrual characters',
+    '((first AND second) XOR (third))',
+    [
       OPEN,
       OPEN,
       FIRST,
@@ -108,201 +101,137 @@ export const structuralCharacterTests = {
       CLOSE,
       EOF,
     ],
-  },
-  'handle space as separator': {
-    expression: `NOT${SPACE}first`,
-    expectedTokens: [NOT, FIRST, EOF],
-  },
-  'handle tab as separator': {
-    expression: `NOT${TAB}first`,
-    expectedTokens: [NOT, FIRST, EOF],
-  },
-  'handle line feed as separator': {
-    expression: `NOT${LINE_FEED}first`,
-    expectedTokens: [NOT, FIRST, EOF],
-  },
-  'handle carriage return as separator': {
-    expression: `NOT${CARRIAGE_RETURN}first`,
-    expectedTokens: [NOT, FIRST, EOF],
-  },
-  'return EOF for whitespace characters': {
-    expression: `${SPACE}${TAB}${LINE_FEED}${CARRIAGE_RETURN}`,
-    expectedTokens: [EOF],
-  },
-};
+  ],
+  ['handle space as separator', `NOT${SPACE}first`, [NOT, FIRST, EOF]],
+  ['handle tab as separator', `NOT${TAB}first`, [NOT, FIRST, EOF]],
+  ['handle line feed as separator', `NOT${LINE_FEED}first`, [NOT, FIRST, EOF]],
+  [
+    'handle carriage return as separator',
+    `NOT${CARRIAGE_RETURN}first`,
+    [NOT, FIRST, EOF],
+  ],
+  [
+    'return EOF for whitespace characters',
+    `${SPACE}${TAB}${LINE_FEED}${CARRIAGE_RETURN}`,
+    [EOF],
+  ],
+];
 
-export const commentTests = {
-  'handle comments containing special characters': {
-    rawString: `# (${SPACE}${TAB}${CARRIAGE_RETURN}#) ${LINE_FEED}`,
-    token: {
-      name: Tokens.COMMENT,
-      value: ` (${SPACE}${TAB}${CARRIAGE_RETURN}#) `,
-    },
-  },
-  'handle multiline comment': {
-    expression: `# Comment line 1
+export const commentTests: [string, string, Token | Token[]][] = [
+  [
+    'handle comments containing special characters',
+    `# (${SPACE}${TAB}${CARRIAGE_RETURN}#) ${LINE_FEED}`,
+    comment(` (${SPACE}${TAB}${CARRIAGE_RETURN}#) `),
+  ],
+  [
+    'handle multiline comment',
+    `# Comment line 1
     # Comment line 2
     # Comment line 3`,
-    expectedTokens: [
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment line 1',
-      },
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment line 2',
-      },
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment line 3',
-      },
+    [
+      comment(' Comment line 1'),
+      comment(' Comment line 2'),
+      comment(' Comment line 3'),
       EOF,
     ],
-  },
-  'return lone # as empty comment': {
-    expression: '#',
-    expectedTokens: [
-      {
-        name: Tokens.COMMENT,
-        value: '',
-      },
-      EOF,
-    ],
-  },
-  'return # and EOL as empty comment': {
-    expression: `#
+  ],
+  ['return lone # as empty comment', '#', [comment(''), EOF]],
+  [
+    'return # and EOL as empty comment',
+    `#
     `,
-    expectedTokens: [
-      {
-        name: Tokens.COMMENT,
-        value: '',
-      },
-      EOF,
-    ],
-  },
-};
+    [comment(''), EOF],
+  ],
+];
 
-export const remainingStringTests = {
-  'lex an operator and return remaining string': {
-    rawString: 'XOR first',
-    token: XOR,
-    remainingString: ' first',
-  },
-  'lex an unquoted identifier and return remaining string': {
-    rawString: 'first OR',
-    token: FIRST,
-    remainingString: ' OR',
-  },
-  'lex a quoted identifier and return remaining string': {
-    rawString: '"first" AND',
-    token: FIRST,
-    remainingString: ' AND',
-  },
-  'lex open parenthesis and return remaining string': {
-    rawString: '(NOT',
-    token: OPEN,
-    remainingString: 'NOT',
-  },
-  'lex close parenthesis and return remaining string': {
-    rawString: `)${LINE_FEED}AND`,
-    token: CLOSE,
-    remainingString: `${LINE_FEED}AND`,
-  },
-  'return empty remaining string with EOF token': {
-    rawString: `${LINE_FEED}`,
-    token: EOF,
-    remainingString: '',
-  },
-};
+export const remainingStringTests: [string, string, Token, string][] = [
+  ['lex an operator and return remaining string', 'XOR first', XOR, ' first'],
+  [
+    'lex an unquoted identifier and return remaining string',
+    'first OR',
+    FIRST,
+    ' OR',
+  ],
+  [
+    'lex a quoted identifier and return remaining string',
+    '"first" AND',
+    FIRST,
+    ' AND',
+  ],
+  ['lex open parenthesis and return remaining string', '(NOT', OPEN, 'NOT'],
+  [
+    'lex close parenthesis and return remaining string',
+    `)${LINE_FEED}AND`,
+    CLOSE,
+    `${LINE_FEED}AND`,
+  ],
+  ['return empty remaining string with EOF token', `${LINE_FEED}`, EOF, ''],
+];
 
-export const complexTests = {
-  'lex an entire expression': {
-    expression: '(first OR (second AND third)) AND fourth',
-    expectedTokens: [
-      OPEN,
-      FIRST,
-      OR,
-      OPEN,
-      SECOND,
-      AND,
-      THIRD,
-      CLOSE,
-      CLOSE,
-      AND,
-      FOURTH,
-      EOF,
-    ],
-  },
-  'lex an expression spanning several lines with comments': {
-    expression: `# Comment 1
+export const complexTests: [string, string, Token[]][] = [
+  [
+    'lex an entire expression',
+    '(first OR (second AND third)) AND fourth',
+    [OPEN, FIRST, OR, OPEN, SECOND, AND, THIRD, CLOSE, CLOSE, AND, FOURTH, EOF],
+  ],
+  [
+    'lex an expression with comments',
+    `# Comment 1
     first # Comment 2
     AND second # Comment 3
     # Comment 4`,
-    expectedTokens: [
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment 1',
-      },
+    [
+      comment(' Comment 1'),
       FIRST,
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment 2',
-      },
+      comment(' Comment 2'),
       AND,
       SECOND,
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment 3',
-      },
-      {
-        name: Tokens.COMMENT,
-        value: ' Comment 4',
-      },
+      comment(' Comment 3'),
+      comment(' Comment 4'),
       EOF,
     ],
-  },
-  'lex a grammatically invalid sequence of tokens without error': {
-    expression: 'AND ) OR first NOT ) ( "second"',
-    expectedTokens: [AND, CLOSE, OR, FIRST, NOT, CLOSE, OPEN, SECOND, EOF],
-  },
-  'return a single identifer when no special characters are found': {
-    expression: 'firstANDsecondORthird',
-    expectedTokens: [
-      {
-        name: Tokens.IDENTIFIER,
-        value: 'firstANDsecondORthird',
-      },
-      EOF,
-    ],
-  },
-};
+  ],
+  [
+    'lex a grammatically invalid sequence of tokens without error',
+    'AND ) OR first NOT ) ( "second"',
+    [AND, CLOSE, OR, FIRST, NOT, CLOSE, OPEN, SECOND, EOF],
+  ],
+  [
+    'return a single identifer when no special characters are found',
+    'firstANDsecondORthird',
+    [id('firstANDsecondORthird'), EOF],
+  ],
+];
 
-export const unhappyTests = {
-  'throw on an unterminated quoted identifier': {
-    rawString: '"first AND second',
-    message: 'Unexpected end of expression: expected " character',
-  },
-  'throw if quoted identifier is not followed by separator or structural character':
-    {
-      rawString: '"first"#',
-      message: 'Unexpected character: # Expected ) character or separator',
-    },
-  'throw if " character is found in an unquoted identifier': {
-    rawString: 'abc"de',
-    message: 'Unexpected character: "',
-  },
-  'throw if # character is found in an unquoted identifier': {
-    rawString: 'abc#de',
-    message: 'Unexpected character: #',
-  },
-  'throw if operator is not followed by a separator': {
-    rawString: 'AND(',
-    message:
-      'Unexpected character: (. Operators should be separated using whitespace',
-  },
-  'throw if closing parenthesis is followed directly by an operator': {
-    rawString: ')OR',
-    message:
-      'Unexpected character: O. A closing parenthesis should be followed by another closing parenthesis or whitespace',
-  },
-};
+export const unhappyTests: [string, string, string][] = [
+  [
+    'throw on an unterminated quoted identifier',
+    '"first AND second',
+    'Unexpected end of expression: expected " character',
+  ],
+  [
+    'throw if quoted identifier is not followed by separator or structural character',
+    '"first"#',
+    'Unexpected character: # Expected ) character or separator',
+  ],
+  [
+    'throw if " character is found in an unquoted identifier',
+    'abc"de',
+    'Unexpected character: "',
+  ],
+  [
+    'throw if # character is found in an unquoted identifier',
+    'abc#de',
+    'Unexpected character: #',
+  ],
+  [
+    'throw if operator is not followed by a separator',
+    'AND(',
+    'Unexpected character: (',
+  ],
+  [
+    'throw if closing parenthesis is not followed by an operator',
+    ')OR',
+    'Unexpected character: O. A closing parenthesis should be followed by another closing parenthesis or whitespace',
+  ],
+];

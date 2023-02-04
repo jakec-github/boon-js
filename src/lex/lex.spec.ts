@@ -1,5 +1,3 @@
-import cases from 'jest-in-case';
-
 import { Token, Tokens } from '../types';
 
 import { lex } from './lex';
@@ -13,12 +11,7 @@ import {
   unhappyTests,
 } from './testData';
 
-interface TokenTest {
-  rawString: string;
-  token: Token;
-}
-
-const checkToken = ({ rawString, token }: TokenTest): void => {
+const checkToken = (rawString: string, token: Token): void => {
   const lexResult = lex(rawString);
   const paddedLexResult = lex(`  ${rawString}  `);
 
@@ -26,15 +19,10 @@ const checkToken = ({ rawString, token }: TokenTest): void => {
   expect(paddedLexResult.token).toEqual(token);
 };
 
-interface ExpressionTest {
-  expression: string;
-  expectedTokens: Token[];
-}
-
-const checkEntireExpression = ({
-  expression,
-  expectedTokens,
-}: ExpressionTest): void => {
+const checkEntireExpression = (
+  expression: string,
+  expectedTokens: Token[],
+): void => {
   let remainingString = expression;
   let tokens: Token[] = [];
   while (true) {
@@ -49,62 +37,69 @@ const checkEntireExpression = ({
   expect(tokens).toEqual(expectedTokens);
 };
 
-const isTokenTest = (test: TokenTest | ExpressionTest): test is TokenTest =>
-  Boolean((test as TokenTest).rawString);
+const isToken = (token: Token | Token[]): token is Token =>
+  !Boolean((token as Token[]).length);
 
-const checkComments = (test: TokenTest | ExpressionTest): void => {
-  if (isTokenTest(test)) {
-    checkToken(test);
+const checkComments = (
+  expression: string,
+  expectedTokens: Token | Token[],
+): void => {
+  if (isToken(expectedTokens)) {
+    checkToken(expression, expectedTokens);
   } else {
-    checkEntireExpression(test);
+    checkEntireExpression(expression, expectedTokens);
   }
 };
 
-interface RemainderTest {
-  rawString: string;
-  token: Token;
-  remainingString: string;
-}
-
-const checkRemainder = ({
-  rawString,
-  token,
-  remainingString,
-}: RemainderTest): void => {
+const checkRemainder = (
+  rawString: string,
+  token: Token,
+  remainingString: string,
+): void => {
   const lexResult = lex(rawString);
 
   expect(lexResult.token).toEqual(token);
   expect(lexResult.remainingString).toEqual(remainingString);
 };
 
-interface ErrorTest {
-  rawString: string;
-  message: string;
-}
-
-const checkError = ({ rawString, message }: ErrorTest): void => {
+const checkError = (rawString: string, message: string): void => {
   expect(() => {
     lex(rawString);
   }).toThrow(message);
 };
 
 describe('lex', () => {
-  test.each(basicTests)('%s', (_, rawString, token) => {
-    const lexResult = lex(rawString);
-    const paddedLexResult = lex(`  ${rawString}  `);
-
-    expect(lexResult.token).toEqual(token);
-    expect(paddedLexResult.token).toEqual(token);
+  describe('Basic Tests', () => {
+    test.each(basicTests)('%s', (_, ...args) => checkToken(...args));
   });
 
-  cases('Identifiers', checkToken, identifierTests);
-  cases(
-    'Structural characters',
-    checkEntireExpression,
-    structuralCharacterTests,
-  );
-  cases('Comments', checkComments, commentTests);
-  cases('Remaining string', checkRemainder, remainingStringTests);
-  cases('Complex tests', checkEntireExpression, complexTests);
-  cases('unhappyPath', checkError, unhappyTests);
+  describe('Identifiers', () => {
+    test.each(identifierTests)('%s', (_, ...args) => checkToken(...args));
+  });
+
+  describe('Structural characters', () => {
+    test.each(structuralCharacterTests)('%s', (_, ...args) =>
+      checkEntireExpression(...args),
+    );
+  });
+
+  describe('Comments', () => {
+    test.each(commentTests)('%s', (_, ...args) => checkComments(...args));
+  });
+
+  describe('Remaining string', () => {
+    test.each(remainingStringTests)('%s', (_, ...args) =>
+      checkRemainder(...args),
+    );
+  });
+
+  describe('Complex tests', () => {
+    test.each(complexTests)('%s', (_, ...args) =>
+      checkEntireExpression(...args),
+    );
+  });
+
+  describe('Unhappy path', () => {
+    test.each(unhappyTests)('%s', (_, ...args) => checkError(...args));
+  });
 });
