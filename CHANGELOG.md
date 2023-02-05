@@ -1,3 +1,7 @@
+## Unreleased
+
+- Removes jest-in-case dev dependency
+
 ## 2.0.4
 
 - Adds new end 2 end tests

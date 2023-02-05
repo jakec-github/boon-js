@@ -624,15 +624,7 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest-in-case@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@types/jest-in-case/-/jest-in-case-1.0.6.tgz#1099525666c45d91df4f344f109cc32324e8fe78"
-  integrity sha512-2VhZGKiji20QLG0gtcNftDmAaSmxoOLUvPW771ZDfi25IpNATGutn5wBnmqWz1Q7NIR6pqraDqrXXpq75wg/GA==
-  dependencies:
-    "@types/jest" "*"
-    "@types/node" "*"
-
-"@types/jest@*", "@types/jest@^29.2.5":
+"@types/jest@^29.2.5":
   version "29.2.5"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.2.5.tgz#c27f41a9d6253f288d1910d3c5f09484a56b73c0"
   integrity sha512-H2cSxkKgVmqNHXP7TC2L/WUorrZu8ZigyRywfVzv6EyBlxj39n4C00hjXYQWsbwqgElaj/CiAeSRmk5GoaKTgw==
@@ -1399,11 +1391,6 @@ jest-haste-map@^29.3.1:
     walker "^1.0.8"
   optionalDependencies:
     fsevents "^2.3.2"
-
-jest-in-case@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/jest-in-case/-/jest-in-case-1.0.2.tgz#56744b5af33222bd0abab70cf919f1d170ab75cc"
-  integrity sha512-2DE6Gdwnh5jkCYTePWoQinF+zne3lCADibXoYJEt8PS84JaRug0CyAOrEgzMxbzln3YcSY2PBeru7ct4tbflYA==
 
 jest-leak-detector@^29.3.1:
   version "29.3.1"
