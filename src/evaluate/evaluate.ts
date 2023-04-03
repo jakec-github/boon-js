@@ -73,3 +73,8 @@ export const evaluate = (
 
   return evaluatedExpression[0];
 };
+
+export const evaluateExpression = (
+  expression: string,
+  booleanMap: BooleanMap
+): boolean => getEvaluator(expression)(booleanMap);

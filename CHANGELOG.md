@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Removes jest-in-case dev dependency
+- Adds evaluateExpression to public API
 
 ## 2.0.4
 
