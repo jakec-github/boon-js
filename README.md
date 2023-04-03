@@ -23,32 +23,42 @@ Add this package from npm using `npm install boon-js` or `yarn add boon-js`
 
 ## Usage
 
-Use getEvaluator to return a function that evaluates the expression for any given input
+Use evaluateExpression to test any given input against an expression
 
 ```javascript
-import { getEvaluator } from 'boon-js';
+import { evaluateExpression } from 'boon-js';
 
-// You can save the function to a variable
-const velociraptorTest = getEvaluator(
-  '(canOpenDoors OR isCleverGirl) AND hasLotsOfTeeth',
-);
+const expression = '(canOpenDoors OR isCleverGirl) AND hasLotsOfTeeth';
 
 const mysteryAnimal = {
   canOpenDoors: true,
   isCleverGirl: false,
-  hasLotsOfTeeth: true,
+  hasLotsOfTeeth: true
 };
 
-velociraptorTest(mysteryAnimal); // Returns true
-
-// or invoke it immediately
-const expression = 'unlocked AND open';
-const door = { unlocked: true }; // `open` will default to false
-
-getEvaluator(expression)(door); // returns false
+evaluateExpression(expression, mysteryAnimal); // Returns true
 ```
 
 ## API reference
+
+### `evaluateExpression()`
+
+Tests any given input against an expression. Returns a boolean
+
+#### Arguments
+
+- expression: string
+- booleanMap: Record<string, any>
+
+#### Returns
+
+- boolean
+
+#### Throws
+
+- Invalid token
+- Unexpected end of expression
+- Expected string but received [received]
 
 ### `getEvaluator()`
 

@@ -1,7 +1,7 @@
 import { TRUE, FALSE, AND, NOT, XOR } from '../testConst';
 import { Tokens } from '../types';
 
-import { evaluate, getEvaluator } from './evaluate';
+import { evaluate, evaluateExpression, getEvaluator } from './evaluate';
 
 const BOOLEAN_MAP = {
   true: true,
@@ -10,11 +10,18 @@ const BOOLEAN_MAP = {
 
 describe('getEvaluator', () => {
   test('should handle a complicated expression', () => {
-    const result = getEvaluator(
-      'NOT (true AND true AND NOT true) XOR (NOT false XOR false)',
+    const getEvaluatorResult = getEvaluator(
+      'NOT (true AND true AND NOT true) XOR (NOT false XOR false)'
     )(BOOLEAN_MAP);
 
-    expect(result).toEqual(false);
+    expect(getEvaluatorResult).toEqual(false);
+
+    const evaluateExpressionResult = evaluateExpression(
+      'NOT (true AND true AND NOT true) XOR (NOT false XOR false)',
+      BOOLEAN_MAP
+    );
+
+    expect(evaluateExpressionResult).toEqual(false);
   });
 
   test('should handle leading NOT operator', () => {
@@ -23,14 +30,33 @@ describe('getEvaluator', () => {
 
     expect(result1).toEqual(false);
     expect(result2).toEqual(true);
+
+    const evaluateExpressionResult1 = evaluateExpression(
+      'NOT true',
+      BOOLEAN_MAP
+    );
+    const evaluateExpressionResult2 = evaluateExpression(
+      'NOT false',
+      BOOLEAN_MAP
+    );
+
+    expect(evaluateExpressionResult1).toEqual(false);
+    expect(evaluateExpressionResult2).toEqual(true);
   });
 
   test('should handle OR, XOR, AND', () => {
-    const result = getEvaluator('true OR true XOR false AND false')(
+    const getEvaluatorResult = getEvaluator('true OR true XOR false AND false')(
       BOOLEAN_MAP,
     );
 
-    expect(result).toEqual(true);
+    expect(getEvaluatorResult).toEqual(true);
+
+    const evaluateExpressionResult = evaluateExpression(
+      'true OR true XOR false AND false',
+      BOOLEAN_MAP
+    );
+
+    expect(evaluateExpressionResult).toEqual(true);
   });
 });
 
