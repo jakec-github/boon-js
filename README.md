@@ -33,7 +33,7 @@ const expression = '(canOpenDoors OR isCleverGirl) AND hasLotsOfTeeth';
 const mysteryAnimal = {
   canOpenDoors: true,
   isCleverGirl: false,
-  hasLotsOfTeeth: true
+  hasLotsOfTeeth: true,
 };
 
 evaluateExpression(expression, mysteryAnimal); // Returns true

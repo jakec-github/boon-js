@@ -18,7 +18,7 @@ export const SEPARATORS = new Set(
     0x0009, // Character tabulation
     0x000a, // Line feed
     0x000d, // Carriage return
-  ].map((separator) => String.fromCodePoint(separator)),
+  ].map((separator) => String.fromCodePoint(separator))
 );
 
 export const QUOTED_IDENTIFIER_DELIMITER = String.fromCodePoint(0x0022);

@@ -12,7 +12,7 @@ import {
 
 const checkEquality = (
   expression: string,
-  postfix: PostfixExpression,
+  postfix: PostfixExpression
 ): void => {
   expect(parse(expression)).toEqual(postfix);
 };
@@ -30,13 +30,13 @@ describe('parse', () => {
 
   describe('Operator precedence', () => {
     test.each(operatorPrecedence)('parse expression: %s', (_, ...args) =>
-      checkEquality(...args),
+      checkEquality(...args)
     );
   });
 
   describe('Parentheses', () => {
     test.each(parentheses)('parse parentheses: %s', (_, ...args) =>
-      checkEquality(...args),
+      checkEquality(...args)
     );
   });
 
@@ -46,7 +46,7 @@ describe('parse', () => {
 
   describe('Complex expressions', () => {
     test.each(complex)('parse complex expression: %s', (_, ...args) =>
-      checkEquality(...args),
+      checkEquality(...args)
     );
   });
 

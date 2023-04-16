@@ -46,7 +46,7 @@ describe('getEvaluator', () => {
 
   test('should handle OR, XOR, AND', () => {
     const getEvaluatorResult = getEvaluator('true OR true XOR false AND false')(
-      BOOLEAN_MAP,
+      BOOLEAN_MAP
     );
 
     expect(getEvaluatorResult).toEqual(true);
@@ -70,7 +70,7 @@ describe('evaluate', () => {
   test('should return true for a complex expression', () => {
     const result = evaluate(
       [FALSE, NOT, TRUE, AND, FALSE, NOT, TRUE, NOT, XOR, AND],
-      BOOLEAN_MAP,
+      BOOLEAN_MAP
     );
 
     expect(result).toEqual(true);
@@ -80,7 +80,7 @@ describe('evaluate', () => {
     expect(() => {
       evaluate(null, BOOLEAN_MAP);
     }).toThrow(
-      'null should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator',
+      'null should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator'
     );
   });
 
@@ -92,7 +92,7 @@ describe('evaluate', () => {
     expect(() => {
       evaluate([{ name: Tokens.OPERATOR, value: null }], BOOLEAN_MAP);
     }).toThrow(
-      'Invalid token: [object Object]. Found in parsed expression at index 0',
+      'Invalid token: [object Object]. Found in parsed expression at index 0'
     );
   });
 
@@ -100,7 +100,7 @@ describe('evaluate', () => {
     expect(() => {
       evaluate([TRUE, TRUE, NOT], BOOLEAN_MAP);
     }).toThrow(
-      'Invalid postfix expression: too many identifiers after evaluation',
+      'Invalid postfix expression: too many identifiers after evaluation'
     );
   });
 });

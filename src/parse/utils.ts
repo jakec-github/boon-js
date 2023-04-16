@@ -5,7 +5,7 @@ import { OPERATOR_PRECEDENCE, VALID_TOKENS } from './const';
 
 export type GetNextToken = (
   validTokens: Token[],
-  endIsValid?: boolean,
+  endIsValid?: boolean
 ) => Token;
 
 export const newTokenGenerator = (expression: string): GetNextToken => {
@@ -27,7 +27,7 @@ export const newTokenGenerator = (expression: string): GetNextToken => {
 
 export const getValue = (
   getNextToken: GetNextToken,
-  parser: (getNextToken: GetNextToken, nested: boolean) => PostfixExpression,
+  parser: (getNextToken: GetNextToken, nested: boolean) => PostfixExpression
 ): PostfixExpression => {
   let nextToken = getNextToken(VALID_TOKENS.identifierOrNot);
   let negatedValue = nextToken.value === Operators.NOT;
@@ -47,14 +47,14 @@ export const getValue = (
 
 export const previousOperatorTakesPrecedent = (
   previousOperator: Operators,
-  nextOperator: Operators,
+  nextOperator: Operators
 ): Boolean =>
   OPERATOR_PRECEDENCE[previousOperator] <= OPERATOR_PRECEDENCE[nextOperator];
 
 export const validateToken = (
   token: Token,
   validTokens: Token[],
-  endIsValid = false,
+  endIsValid = false
 ) => {
   if (token.name === Tokens.EOF) {
     if (endIsValid) {

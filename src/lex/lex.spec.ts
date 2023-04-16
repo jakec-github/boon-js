@@ -21,7 +21,7 @@ const checkToken = (rawString: string, token: Token): void => {
 
 const checkEntireExpression = (
   expression: string,
-  expectedTokens: Token[],
+  expectedTokens: Token[]
 ): void => {
   let remainingString = expression;
   let tokens: Token[] = [];
@@ -42,7 +42,7 @@ const isToken = (token: Token | Token[]): token is Token =>
 
 const checkComments = (
   expression: string,
-  expectedTokens: Token | Token[],
+  expectedTokens: Token | Token[]
 ): void => {
   if (isToken(expectedTokens)) {
     checkToken(expression, expectedTokens);
@@ -54,7 +54,7 @@ const checkComments = (
 const checkRemainder = (
   rawString: string,
   token: Token,
-  remainingString: string,
+  remainingString: string
 ): void => {
   const lexResult = lex(rawString);
 
@@ -79,7 +79,7 @@ describe('lex', () => {
 
   describe('Structural characters', () => {
     test.each(structuralCharacterTests)('%s', (_, ...args) =>
-      checkEntireExpression(...args),
+      checkEntireExpression(...args)
     );
   });
 
@@ -89,13 +89,13 @@ describe('lex', () => {
 
   describe('Remaining string', () => {
     test.each(remainingStringTests)('%s', (_, ...args) =>
-      checkRemainder(...args),
+      checkRemainder(...args)
     );
   });
 
   describe('Complex tests', () => {
     test.each(complexTests)('%s', (_, ...args) =>
-      checkEntireExpression(...args),
+      checkEntireExpression(...args)
     );
   });
 
