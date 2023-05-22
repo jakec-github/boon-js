@@ -4,7 +4,7 @@ export const OPERATOR_PRECEDENCE = {
   NOT: 0,
   XOR: 1,
   AND: 2,
-  OR: 3,
+  OR: 3
 };
 
 export const VALID_TOKENS: Record<string, Token[]> = {
@@ -12,21 +12,21 @@ export const VALID_TOKENS: Record<string, Token[]> = {
     { name: Tokens.IDENTIFIER },
     {
       name: Tokens.STRUCTURAL_CHARACTER,
-      value: StructuralCharacters.OPEN_PARENTHESIS,
-    },
+      value: StructuralCharacters.OPEN_PARENTHESIS
+    }
   ],
   identifierOrNot: [
     { name: Tokens.IDENTIFIER },
     {
       name: Tokens.STRUCTURAL_CHARACTER,
-      value: StructuralCharacters.OPEN_PARENTHESIS,
+      value: StructuralCharacters.OPEN_PARENTHESIS
     },
-    { name: Tokens.OPERATOR, value: Operators.NOT },
+    { name: Tokens.OPERATOR, value: Operators.NOT }
   ],
   binaryOperator: [
     { name: Tokens.OPERATOR, value: Operators.AND },
     { name: Tokens.OPERATOR, value: Operators.OR },
-    { name: Tokens.OPERATOR, value: Operators.XOR },
+    { name: Tokens.OPERATOR, value: Operators.XOR }
   ],
   binaryOperatorOrClose: [
     { name: Tokens.OPERATOR, value: Operators.AND },
@@ -34,7 +34,7 @@ export const VALID_TOKENS: Record<string, Token[]> = {
     { name: Tokens.OPERATOR, value: Operators.XOR },
     {
       name: Tokens.STRUCTURAL_CHARACTER,
-      value: StructuralCharacters.CLOSE_PARENTHESIS,
-    },
-  ],
+      value: StructuralCharacters.CLOSE_PARENTHESIS
+    }
+  ]
 };

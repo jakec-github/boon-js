@@ -2,12 +2,12 @@ export enum Operators {
   AND = 'AND',
   OR = 'OR',
   XOR = 'XOR',
-  NOT = 'NOT',
+  NOT = 'NOT'
 }
 
 export enum StructuralCharacters {
   OPEN_PARENTHESIS = '(',
-  CLOSE_PARENTHESIS = ')',
+  CLOSE_PARENTHESIS = ')'
 }
 
 export enum Tokens {
@@ -15,7 +15,7 @@ export enum Tokens {
   OPERATOR = 'OPERATOR',
   STRUCTURAL_CHARACTER = 'STRUCTURAL_CHARACTER',
   EOF = 'EOF',
-  COMMENT = 'COMMENT',
+  COMMENT = 'COMMENT'
 }
 
 export interface Token {
@@ -35,4 +35,4 @@ export interface LexResult {
 
 export type PostfixExpression = Token[];
 
-export type BooleanMap = Record<string, any>;
+export type BooleanMap = Record<string, boolean>;

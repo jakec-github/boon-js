@@ -6,7 +6,7 @@ import {
   isIdentifier,
   isOperator,
   notUtil,
-  throwInvalidExpression,
+  throwInvalidExpression
 } from './utils';
 
 type EvaluatorFunction = (booleanMap: BooleanMap) => boolean;
@@ -19,11 +19,11 @@ export const getEvaluator = (expression: string): EvaluatorFunction => {
 
 export const evaluate = (
   expression: PostfixExpression,
-  booleanMap: BooleanMap,
+  booleanMap: BooleanMap
 ): boolean => {
   if (!Array.isArray(expression)) {
     throw new Error(
-      `${expression} should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator`,
+      `${expression} should be an array. evaluate takes in a parsed expression. Use in combination with parse or use getEvaluator`
     );
   }
 
@@ -35,7 +35,7 @@ export const evaluate = (
     (stack, token, i) => {
       if (!(token && (isIdentifier(token) || isOperator(token)))) {
         throw new Error(
-          `Invalid token: ${token}. Found in parsed expression at index ${i}`,
+          `Invalid token: ${token}. Found in parsed expression at index ${i}`
         );
       }
       if (token.name === Tokens.IDENTIFIER) {
@@ -64,7 +64,7 @@ export const evaluate = (
 
       return [...stack.slice(0, -2), operatorUtil(secondLastItem, lastItem)];
     },
-    [],
+    []
   );
 
   if (evaluatedExpression.length !== 1) {

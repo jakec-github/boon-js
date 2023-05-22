@@ -5,13 +5,14 @@ import { OPERATOR_PRECEDENCE, VALID_TOKENS } from './const';
 
 export type GetNextToken = (
   validTokens: Token[],
-  endIsValid?: boolean,
+  endIsValid?: boolean
 ) => Token;
 
 export const newTokenGenerator = (expression: string): GetNextToken => {
   let remainingExpression = expression;
 
   return (validTokens, endIsValid = false) => {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const { token, remainingString } = lex(remainingExpression);
       remainingExpression = remainingString;
@@ -27,10 +28,10 @@ export const newTokenGenerator = (expression: string): GetNextToken => {
 
 export const getValue = (
   getNextToken: GetNextToken,
-  parser: (getNextToken: GetNextToken, nested: boolean) => PostfixExpression,
+  parser: (getNextToken: GetNextToken, nested: boolean) => PostfixExpression
 ): PostfixExpression => {
   let nextToken = getNextToken(VALID_TOKENS.identifierOrNot);
-  let negatedValue = nextToken.value === Operators.NOT;
+  const negatedValue = nextToken.value === Operators.NOT;
   if (negatedValue) {
     nextToken = getNextToken(VALID_TOKENS.identifierOnly);
   }
@@ -47,14 +48,14 @@ export const getValue = (
 
 export const previousOperatorTakesPrecedent = (
   previousOperator: Operators,
-  nextOperator: Operators,
-): Boolean =>
+  nextOperator: Operators
+): boolean =>
   OPERATOR_PRECEDENCE[previousOperator] <= OPERATOR_PRECEDENCE[nextOperator];
 
 export const validateToken = (
   token: Token,
   validTokens: Token[],
-  endIsValid = false,
+  endIsValid = false
 ) => {
   if (token.name === Tokens.EOF) {
     if (endIsValid) {
@@ -63,7 +64,7 @@ export const validateToken = (
     throw new Error('Unexpected end of expression');
   }
 
-  for (let validToken of validTokens) {
+  for (const validToken of validTokens) {
     if (validToken.name === token.name) {
       if (!validToken.value || validToken.value === token.value) {
         return;
