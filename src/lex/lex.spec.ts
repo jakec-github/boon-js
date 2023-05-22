@@ -25,6 +25,7 @@ const checkEntireExpression = (
 ): void => {
   let remainingString = expression;
   let tokens: Token[] = [];
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const result = lex(remainingString);
     remainingString = result.remainingString;

@@ -18,7 +18,7 @@ export const lex = (expression: string): LexResult => {
   for (let i = 0; i < expression.length; i += 1) {
     const char = expression[i];
 
-    // Finds tokem start and returns immediately returns any identifiable tokens
+    // Finds token start and returns immediately returns any identifiable tokens
     if (tokenStart === null) {
       if (!SEPARATORS.has(char)) {
         const structuralChar = STRUCTURAL_CHARACTERS[char];

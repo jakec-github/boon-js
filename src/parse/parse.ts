@@ -30,6 +30,7 @@ const parseInternal = (
   let output: PostfixExpression = [...getValue(getNextToken, parseInternal)];
   let operators: PostfixExpression = [];
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const validTokens = nested
       ? VALID_TOKENS.binaryOperatorOrClose

@@ -35,4 +35,4 @@ export interface LexResult {
 
 export type PostfixExpression = Token[];
 
-export type BooleanMap = Record<string, any>;
+export type BooleanMap = Record<string, boolean>;

@@ -12,6 +12,7 @@ export const newTokenGenerator = (expression: string): GetNextToken => {
   let remainingExpression = expression;
 
   return (validTokens, endIsValid = false) => {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const { token, remainingString } = lex(remainingExpression);
       remainingExpression = remainingString;
