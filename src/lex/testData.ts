@@ -15,7 +15,7 @@ import {
   SPACE,
   TAB,
   LINE_FEED,
-  CARRIAGE_RETURN,
+  CARRIAGE_RETURN
 } from '../testConst';
 import { Token, Tokens } from '../types';
 
@@ -34,9 +34,9 @@ export const basicTests: [string, string, Token][] = [
   [
     'lex a comment',
     `# comment${LINE_FEED}`,
-    { name: Tokens.COMMENT, value: ' comment' },
+    { name: Tokens.COMMENT, value: ' comment' }
   ],
-  ['return an EOF token when no token is found', '', EOF],
+  ['return an EOF token when no token is found', '', EOF]
 ];
 
 // Rewrite the indentifier tests in the forma of the basc tests
@@ -52,55 +52,42 @@ export const identifierTests: [string, string, Token][] = [
   [
     'handle line feed character in quoted identifier',
     `"${LINE_FEED}"`,
-    id(LINE_FEED),
+    id(LINE_FEED)
   ],
   [
     'handle carriage return character in quoted identifier',
     `"${CARRIAGE_RETURN}"`,
-    id(CARRIAGE_RETURN),
+    id(CARRIAGE_RETURN)
   ],
   [
     'handle multiple structural characters in quoted identifier',
     '"(())"',
-    id('(())'),
+    id('(())')
   ],
   ['handle multiple operators in quoted identifier', '"ANDOR"', id('ANDOR')],
   [
     'handle multiple operators and structural characters in quoted identifier',
     '"AND(OR)"',
-    id('AND(OR)'),
+    id('AND(OR)')
   ],
   [
     'handle space then # character in quoted identifier',
     `"${SPACE}#"`,
-    id(`${SPACE}#`),
+    id(`${SPACE}#`)
   ],
-  ['handle empty quoted identifier', '""', id('')],
+  ['handle empty quoted identifier', '""', id('')]
 ];
 
 export const structuralCharacterTests: [string, string, Token[]][] = [
   [
     'handle structural characters that are not separated using whitespace',
     'NOT (first)',
-    [NOT, OPEN, FIRST, CLOSE, EOF],
+    [NOT, OPEN, FIRST, CLOSE, EOF]
   ],
   [
     'handle nested structrual characters',
     '((first AND second) XOR (third))',
-    [
-      OPEN,
-      OPEN,
-      FIRST,
-      AND,
-      SECOND,
-      CLOSE,
-      XOR,
-      OPEN,
-      THIRD,
-      CLOSE,
-      CLOSE,
-      EOF,
-    ],
+    [OPEN, OPEN, FIRST, AND, SECOND, CLOSE, XOR, OPEN, THIRD, CLOSE, CLOSE, EOF]
   ],
   ['handle space as separator', `NOT${SPACE}first`, [NOT, FIRST, EOF]],
   ['handle tab as separator', `NOT${TAB}first`, [NOT, FIRST, EOF]],
@@ -108,20 +95,20 @@ export const structuralCharacterTests: [string, string, Token[]][] = [
   [
     'handle carriage return as separator',
     `NOT${CARRIAGE_RETURN}first`,
-    [NOT, FIRST, EOF],
+    [NOT, FIRST, EOF]
   ],
   [
     'return EOF for whitespace characters',
     `${SPACE}${TAB}${LINE_FEED}${CARRIAGE_RETURN}`,
-    [EOF],
-  ],
+    [EOF]
+  ]
 ];
 
 export const commentTests: [string, string, Token | Token[]][] = [
   [
     'handle comments containing special characters',
     `# (${SPACE}${TAB}${CARRIAGE_RETURN}#) ${LINE_FEED}`,
-    comment(` (${SPACE}${TAB}${CARRIAGE_RETURN}#) `),
+    comment(` (${SPACE}${TAB}${CARRIAGE_RETURN}#) `)
   ],
   [
     'handle multiline comment',
@@ -132,16 +119,16 @@ export const commentTests: [string, string, Token | Token[]][] = [
       comment(' Comment line 1'),
       comment(' Comment line 2'),
       comment(' Comment line 3'),
-      EOF,
-    ],
+      EOF
+    ]
   ],
   ['return lone # as empty comment', '#', [comment(''), EOF]],
   [
     'return # and EOL as empty comment',
     `#
     `,
-    [comment(''), EOF],
-  ],
+    [comment(''), EOF]
+  ]
 ];
 
 export const remainingStringTests: [string, string, Token, string][] = [
@@ -150,29 +137,29 @@ export const remainingStringTests: [string, string, Token, string][] = [
     'lex an unquoted identifier and return remaining string',
     'first OR',
     FIRST,
-    ' OR',
+    ' OR'
   ],
   [
     'lex a quoted identifier and return remaining string',
     '"first" AND',
     FIRST,
-    ' AND',
+    ' AND'
   ],
   ['lex open parenthesis and return remaining string', '(NOT', OPEN, 'NOT'],
   [
     'lex close parenthesis and return remaining string',
     `)${LINE_FEED}AND`,
     CLOSE,
-    `${LINE_FEED}AND`,
+    `${LINE_FEED}AND`
   ],
-  ['return empty remaining string with EOF token', `${LINE_FEED}`, EOF, ''],
+  ['return empty remaining string with EOF token', `${LINE_FEED}`, EOF, '']
 ];
 
 export const complexTests: [string, string, Token[]][] = [
   [
     'lex an entire expression',
     '(first OR (second AND third)) AND fourth',
-    [OPEN, FIRST, OR, OPEN, SECOND, AND, THIRD, CLOSE, CLOSE, AND, FOURTH, EOF],
+    [OPEN, FIRST, OR, OPEN, SECOND, AND, THIRD, CLOSE, CLOSE, AND, FOURTH, EOF]
   ],
   [
     'lex an expression with comments',
@@ -188,50 +175,50 @@ export const complexTests: [string, string, Token[]][] = [
       SECOND,
       comment(' Comment 3'),
       comment(' Comment 4'),
-      EOF,
-    ],
+      EOF
+    ]
   ],
   [
     'lex a grammatically invalid sequence of tokens without error',
     'AND ) OR first NOT ) ( "second"',
-    [AND, CLOSE, OR, FIRST, NOT, CLOSE, OPEN, SECOND, EOF],
+    [AND, CLOSE, OR, FIRST, NOT, CLOSE, OPEN, SECOND, EOF]
   ],
   [
     'return a single identifer when no special characters are found',
     'firstANDsecondORthird',
-    [id('firstANDsecondORthird'), EOF],
-  ],
+    [id('firstANDsecondORthird'), EOF]
+  ]
 ];
 
 export const unhappyTests: [string, string, string][] = [
   [
     'throw on an unterminated quoted identifier',
     '"first AND second',
-    'Unexpected end of expression: expected " character',
+    'Unexpected end of expression: expected " character'
   ],
   [
     'throw if quoted identifier is not followed by separator or structural character',
     '"first"#',
-    'Unexpected character: # Expected ) character or separator',
+    'Unexpected character: # Expected ) character or separator'
   ],
   [
     'throw if " character is found in an unquoted identifier',
     'abc"de',
-    'Unexpected character: "',
+    'Unexpected character: "'
   ],
   [
     'throw if # character is found in an unquoted identifier',
     'abc#de',
-    'Unexpected character: #',
+    'Unexpected character: #'
   ],
   [
     'throw if operator is not followed by a separator',
     'AND(',
-    'Unexpected character: (',
+    'Unexpected character: ('
   ],
   [
     'throw if closing parenthesis is not followed by an operator',
     ')OR',
-    'Unexpected character: O. A closing parenthesis should be followed by another closing parenthesis or whitespace',
-  ],
+    'Unexpected character: O. A closing parenthesis should be followed by another closing parenthesis or whitespace'
+  ]
 ];

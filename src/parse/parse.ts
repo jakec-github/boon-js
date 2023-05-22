@@ -5,7 +5,7 @@ import {
   previousOperatorTakesPrecedent,
   newTokenGenerator,
   GetNextToken,
-  getValue,
+  getValue
 } from './utils';
 
 // Returns the tokens using postfix notation
@@ -24,7 +24,7 @@ export const parse = (expression: string): PostfixExpression => {
 // parseInternal will recurse over bracketed expressions
 const parseInternal = (
   getNextToken: GetNextToken,
-  nested = false,
+  nested = false
 ): PostfixExpression => {
   // This initialises the output with everything up the first unnested operator
   let output: PostfixExpression = [...getValue(getNextToken, parseInternal)];
@@ -52,7 +52,7 @@ const parseInternal = (
         previousOperator &&
         previousOperatorTakesPrecedent(
           previousOperator.value as Operators,
-          nextToken.value as Operators,
+          nextToken.value as Operators
         )
       ) {
         output = [...output, previousOperator];

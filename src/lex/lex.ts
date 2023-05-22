@@ -5,7 +5,7 @@ import {
   OPERATORS,
   SEPARATORS,
   QUOTED_IDENTIFIER_DELIMITER,
-  COMMENT_DELIMITER,
+  COMMENT_DELIMITER
 } from './const';
 import { createResult, getComment, getQuotedIdentifier } from './utils';
 
@@ -32,14 +32,14 @@ export const lex = (expression: string): LexResult => {
             nextChar !== StructuralCharacters.CLOSE_PARENTHESIS
           ) {
             throw new Error(
-              `Unexpected character: ${nextChar}. A closing parenthesis should be followed by another closing parenthesis or whitespace`,
+              `Unexpected character: ${nextChar}. A closing parenthesis should be followed by another closing parenthesis or whitespace`
             );
           }
 
           return createResult(
             Tokens.STRUCTURAL_CHARACTER,
             STRUCTURAL_CHARACTERS[char],
-            expression.slice(i + 1),
+            expression.slice(i + 1)
           );
         }
         // Once a quoted identifier has been identified it is retrieved in a separate function
@@ -78,7 +78,7 @@ export const lex = (expression: string): LexResult => {
     if (OPERATORS[value]) {
       if (delimitingCharacter && !SEPARATORS.has(delimitingCharacter)) {
         throw new Error(
-          `Unexpected character: ${delimitingCharacter}. Operators should be separated using whitespace`,
+          `Unexpected character: ${delimitingCharacter}. Operators should be separated using whitespace`
         );
       }
       return createResult(Tokens.OPERATOR, OPERATORS[value], remainingString);

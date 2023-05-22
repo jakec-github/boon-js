@@ -5,19 +5,19 @@ import {
   SEPARATORS,
   QUOTED_IDENTIFIER_DELIMITER,
   EOL,
-  ESCAPE_CHARACTER,
+  ESCAPE_CHARACTER
 } from './const';
 
 export const createResult = (
   name: Token['name'],
   value: Token['value'],
-  remainingString: string,
+  remainingString: string
 ): LexResult => ({
   token: {
     name,
-    ...(value !== null ? { value } : {}),
+    ...(value !== null ? { value } : {})
   },
-  remainingString,
+  remainingString
 });
 
 export const getComment = (expression: string): LexResult => {
@@ -35,7 +35,7 @@ export const getComment = (expression: string): LexResult => {
   return createResult(
     Tokens.COMMENT,
     expression.slice(0, tokenEnd),
-    expression.slice(tokenEnd + 1),
+    expression.slice(tokenEnd + 1)
   );
 };
 
@@ -65,7 +65,7 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
     } else {
       if (!SEPARATORS.has(char) && !STRUCTURAL_CHARACTERS[char]) {
         throw new Error(
-          `Unexpected character: ${char} Expected ) character or separator`,
+          `Unexpected character: ${char} Expected ) character or separator`
         );
       }
       break;
@@ -74,7 +74,7 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
 
   if (tokenEnd === null) {
     throw new Error(
-      `Unexpected end of expression: expected ${QUOTED_IDENTIFIER_DELIMITER} character`,
+      `Unexpected end of expression: expected ${QUOTED_IDENTIFIER_DELIMITER} character`
     );
   }
 
