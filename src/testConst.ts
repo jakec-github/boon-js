@@ -8,6 +8,7 @@ export const SECOND = { name: Tokens.IDENTIFIER, value: 'second' };
 export const THIRD = { name: Tokens.IDENTIFIER, value: 'third' };
 export const FOURTH = { name: Tokens.IDENTIFIER, value: 'fourth' };
 export const FIFTH = { name: Tokens.IDENTIFIER, value: 'fifth' };
+export const QUOTED_IDENTIFIER = { name: Tokens.IDENTIFIER, value: '"quotes"' };
 
 export const NOT = { name: Tokens.OPERATOR, value: Operators.NOT };
 export const XOR = { name: Tokens.OPERATOR, value: Operators.XOR };

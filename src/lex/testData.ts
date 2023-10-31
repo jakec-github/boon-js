@@ -16,6 +16,7 @@ import {
   TAB,
   LINE_FEED,
   CARRIAGE_RETURN,
+  QUOTED_IDENTIFIER,
 } from '../testConst';
 import { Token, Tokens } from '../types';
 
@@ -29,6 +30,11 @@ export const basicTests: [string, string, Token][] = [
   ['lex OR operator', 'OR', OR],
   ['lex an unquoted identifier', 'true', TRUE],
   ['lex a quoted identifier', '"false"', FALSE],
+  [
+    "lex a quoted identifier with escaped quotes",
+    '"\\"quotes\\""',
+    QUOTED_IDENTIFIER,
+  ],
   ['lex an open parenthesis', '(', OPEN],
   ['lex a close parenthesis', ')', CLOSE],
   [

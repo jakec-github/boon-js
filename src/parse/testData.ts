@@ -8,12 +8,14 @@ import {
   NOT,
   XOR,
   OR,
+  QUOTED_IDENTIFIER,
 } from '../testConst';
 import { PostfixExpression } from '../types';
 
 export const basic: [string, string, PostfixExpression][] = [
   ['lone identifier', 'first', [FIRST]],
   ['simple expression', 'first AND second', [FIRST, SECOND, AND]],
+  ['quoted expression', '"first" AND "\\"quotes\\""', [FIRST, QUOTED_IDENTIFIER, AND]],
   ['NOT operator', 'NOT first', [FIRST, NOT]],
 ];
 
