@@ -2,6 +2,7 @@
 
 - Removes jest-in-case dev dependency
 - Adds evaluateExpression to public API
+- Fixed quote escaping in quoted identifiers
 
 ## 2.0.4
 

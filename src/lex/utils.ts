@@ -50,7 +50,8 @@ export const getQuotedIdentifier = (expression: string): LexResult => {
     if (tokenEnd === null) {
       if (char === QUOTED_IDENTIFIER_DELIMITER) {
         if (escapeQuotation) {
-          value = value.slice(-1) + QUOTED_IDENTIFIER_DELIMITER;
+          value = value.slice(0, -1) + QUOTED_IDENTIFIER_DELIMITER;
+          escapeQuotation = false;
         } else {
           tokenEnd = i;
         }
