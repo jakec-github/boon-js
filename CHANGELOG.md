@@ -1,5 +1,9 @@
 ## Unreleased
 
+- No unreleased changes
+
+## 2.0.5
+
 - Removes jest-in-case dev dependency
 - Adds evaluateExpression to public API
 - Fixed quote escaping in quoted identifiers
